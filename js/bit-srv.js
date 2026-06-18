@@ -1,10 +1,12 @@
 /* THE BIT LIFE — BIT-SRV block burst → code tunnel (from aggregator surf) */
 (function(){
   const trigger = document.getElementById('bitsrv-trigger');
+  const shell = document.getElementById('retro-block-shell');
   const stage = document.getElementById('surf-stage');
   const burst = document.getElementById('surf-burst');
   const wrap = document.getElementById('surf-canvas-wrap');
   const sub = document.getElementById('surfSub');
+  const lavaAnchor = document.getElementById('lava-tunnel');
   if(!trigger || !stage) return;
 
   const lines = [
@@ -40,6 +42,10 @@
       burst.appendChild(b);
     }
     trigger.classList.add('booting');
+    if(shell) shell.style.cursor = 'default';
+    if(lavaAnchor){
+      lavaAnchor.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
     setTimeout(()=>{
       stage.classList.add('tunnel-live');
       initSurf();
@@ -47,10 +53,21 @@
     }, 900);
   }
 
-  trigger.addEventListener('click', runBurst);
+  function boot(e){
+    if(e) e.preventDefault();
+    runBurst();
+  }
+
+  trigger.addEventListener('click', e=>{ e.stopPropagation(); boot(e); });
   trigger.addEventListener('keydown', e=>{
-    if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); runBurst(); }
+    if(e.key === 'Enter' || e.key === ' ') boot(e);
   });
+  if(shell){
+    shell.addEventListener('click', e=>{
+      if(stage.classList.contains('tunnel-live')) return;
+      boot(e);
+    });
+  }
 
   function initSurf(){
     if(typeof THREE === 'undefined'){ return setTimeout(initSurf, 200); }

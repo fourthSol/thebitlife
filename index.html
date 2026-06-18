@@ -48,7 +48,7 @@
   border-left:1px solid var(--line-soft);overflow:visible;z-index:2;
 }
 .hero-video-rail{
-  position:fixed;top:var(--nav-h);right:0;width:min(46vw,560px);
+  position:fixed;top:calc(var(--nav-h) + 52px);right:0;width:min(46vw,560px);
   z-index:1;pointer-events:none;
   -webkit-mask:linear-gradient(180deg,transparent 0%,#000 14%,#000 92%,transparent 100%);
   mask:linear-gradient(180deg,transparent 0%,#000 14%,#000 92%,transparent 100%);
@@ -63,10 +63,57 @@
 }
 #hero-yt-mount{width:100%;height:100%;min-height:220px}
 
+/* Retro BIT-SRV strip — right under nav / sitewall */
+.retro-strip{
+  position:relative;z-index:45;
+  display:grid;grid-template-columns:1fr min(46vw,560px);
+  border-bottom:1px solid var(--line-soft);
+  background:linear-gradient(180deg,rgba(5,7,9,.55),transparent);
+}
+[data-theme="light"] .retro-strip{background:linear-gradient(180deg,rgba(255,248,235,.7),transparent)}
+.retro-strip-panel{
+  grid-column:2;padding:14px 24px 18px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
 .hero-surf-zone{
-  position:relative;z-index:4;margin-top:28px;padding:20px 24px 32px;
+  position:relative;z-index:4;width:100%;
   display:flex;flex-direction:column;align-items:center;gap:12px;
 }
+.retro-block-shell{
+  position:relative;width:100%;max-width:420px;padding:10px;border-radius:22px;
+  cursor:pointer;
+}
+.retro-block-shell::before{
+  content:"";position:absolute;inset:-2px;border-radius:24px;z-index:0;
+  background:conic-gradient(from 0deg,#ff5cf0,#ffd400,#7CFC00,#00e5ff,#9459FF,#ff5cf0);
+  animation:rainbowspin 3.5s linear infinite;
+  opacity:.75;filter:blur(.5px);
+}
+.retro-block-shell::after{
+  content:"";position:absolute;inset:-2px;border-radius:24px;z-index:0;
+  background:conic-gradient(from 180deg,#00e5ff,#ff5cf0,#ffd400,#7CFC00,#9459FF,#00e5ff);
+  animation:rainbowspin 3.5s linear infinite reverse;
+  opacity:.35;mix-blend-mode:screen;
+}
+@keyframes rainbowspin{to{transform:rotate(360deg)}}
+.hscroll-track{
+  position:absolute;left:8px;right:8px;height:18px;overflow:hidden;z-index:6;
+  pointer-events:none;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+}
+.hscroll-track.top{top:2px}
+.hscroll-track.bot{bottom:2px}
+.hscroll-track span{
+  display:inline-block;white-space:nowrap;padding-right:40px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;
+  background:linear-gradient(90deg,#ffd400,#ff5cf0,#00e5ff,#7CFC00,#ffd400);
+  background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:hscroll 22s linear infinite,rainbowtext 4s linear infinite;
+}
+.retro-block-shell:hover .hscroll-track span{animation-duration:7s,2s}
+@keyframes hscroll{to{transform:translateX(-50%)}}
+@keyframes rainbowtext{to{background-position:200% 0}}
 .surf-title{
   font-family:'Chakra Petch',sans-serif;font-weight:700;font-style:italic;
   font-size:clamp(26px,3.2vw,38px);letter-spacing:.01em;text-transform:lowercase;
@@ -77,11 +124,13 @@
   transform:skewX(-7deg);
 }
 .surf-stage{
-  position:relative;width:100%;max-width:420px;height:400px;
+  position:relative;width:100%;height:340px;z-index:2;
   border:1px solid var(--line);border-radius:18px;overflow:hidden;
   background:#02060a;
   box-shadow:0 24px 60px rgba(0,0,0,.55),inset 0 0 60px rgba(0,229,255,.08);
+  transition:height .6s ease,box-shadow .4s ease;
 }
+.surf-stage.tunnel-live{height:min(72vh,520px);box-shadow:0 0 48px rgba(0,229,255,.25),0 24px 60px rgba(0,0,0,.55)}
 .surf-burst{
   position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden;
 }
@@ -150,10 +199,12 @@
   .bitsrv-trigger .server{animation:none}
 }
 @media(max-width:860px){
+  .retro-strip{grid-template-columns:1fr}
+  .retro-strip-panel{grid-column:1;padding:16px}
   .hero{grid-template-columns:1fr;min-height:auto}
-  .hero-right{min-height:auto;border:none}
+  .hero-right{min-height:auto;border:none;display:none}
   .hero-video-rail{display:none}
-  .hero-surf-zone{margin-top:0;padding:24px 0}
+  .surf-stage{height:300px}
   .video-chrome{right:14px;bottom:14px}
 }
 
@@ -401,6 +452,41 @@
 <!-- SITE WALL -->
 <div class="sitewall" id="sitewall"></div>
 
+<!-- RETRO BIT-SRV — right under nav -->
+<section class="retro-strip" id="lava-tunnel" aria-label="BIT-SRV retro block">
+  <div></div>
+  <div class="retro-strip-panel hero-surf-zone">
+    <div class="surf-title">the bit life</div>
+    <div class="retro-block-shell" id="retro-block-shell">
+      <div class="hscroll-track top" aria-hidden="true"><span>▓▓ ## BIT-SRV blk900000 sha256 0xF1 nonce OP_DUP ▓▓ ## BIT-SRV blk900000 sha256 0xF1 nonce OP_DUP ▓▓ ## </span></div>
+      <div class="hscroll-track bot" aria-hidden="true"><span>w3lc0m3 2 da 8!T LYPH · riding da bit lyf3 tube · sha-256 swell · w3lc0m3 2 da 8!T LYPH · riding da bit lyf3 tube · </span></div>
+      <div class="surf-stage" id="surf-stage">
+        <div class="surf-burst" id="surf-burst"></div>
+        <button class="bitsrv-trigger" id="bitsrv-trigger" type="button" aria-label="Boot BIT-SRV — enter the code tunnel">
+          <pre class="server" aria-hidden="true">      .------------------.
+     /                  /|
+    /                  / |
+   +------------------+  |
+   | [::] BIT-SRV ▓▓  |  |
+   |  o  ___________   |  |
+   |  o |##|##|##|##|  | /|
+   |  o |##|##|##|##|  |/ |
+   |  o  ‾‾‾‾‾‾‾‾‾‾‾   |  |
+   |  o  ___________   | /|
+   |  o |##|##|##|##|  |/ |
+   |  o  ‾‾‾‾‾‾‾‾‾‾‾   |  |
+   |  ◉  ▌blk 900000▐  | /
+   +------------------+ /
+   |__________________|/</pre>
+        </button>
+        <div class="surf-canvas-wrap" id="surf-canvas-wrap"></div>
+      </div>
+    </div>
+    <div class="surf-sub" id="surfSub">w3lc0me 2 da <b>8!T LYPH</b></div>
+    <div class="surf-note">riding the code tunnel · sha-256 swell · click the block</div>
+  </div>
+</section>
+
 <!-- HERO -->
 <header class="hero">
   <div class="hero-left wrap" style="max-width:none;padding-left:max(28px,calc((100vw - 1280px)/2 + 28px))">
@@ -429,32 +515,6 @@
       <div class="hero-video-viewport" id="hero-video-viewport">
         <div id="hero-yt-mount"></div>
       </div>
-    </div>
-    <div class="hero-surf-zone">
-      <div class="surf-title">the bit life</div>
-      <div class="surf-stage" id="surf-stage">
-        <div class="surf-burst" id="surf-burst"></div>
-        <button class="bitsrv-trigger" id="bitsrv-trigger" type="button" aria-label="Boot BIT-SRV — enter the code tunnel">
-          <pre class="server" aria-hidden="true">      .------------------.
-     /                  /|
-    /                  / |
-   +------------------+  |
-   | [::] BIT-SRV ▓▓  |  |
-   |  o  ___________   |  |
-   |  o |##|##|##|##|  | /|
-   |  o |##|##|##|##|  |/ |
-   |  o  ‾‾‾‾‾‾‾‾‾‾‾   |  |
-   |  o  ___________   | /|
-   |  o |##|##|##|##|  |/ |
-   |  o  ‾‾‾‾‾‾‾‾‾‾‾   |  |
-   |  ◉  ▌blk 900000▐  | /
-   +------------------+ /
-   |__________________|/</pre>
-        </button>
-        <div class="surf-canvas-wrap" id="surf-canvas-wrap"></div>
-      </div>
-      <div class="surf-sub" id="surfSub">w3lc0me 2 da <b>8!T LYPH</b></div>
-      <div class="surf-note">riding the code tunnel · sha-256 swell</div>
     </div>
   </div>
 </header>
