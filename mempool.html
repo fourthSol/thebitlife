@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mempool — THE BIT LIFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/shared.css">
+<!-- QR Code library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+/* ---- PHASE 1: mempool.space-inspired palette ---- */
+body.phase-1 {
+  --mp-bg:#1d1f2d;--mp-panel:#2a2d3e;--mp-accent:#7c3aed;
+  --mp-green:#00c087;--mp-orange:#f7931a;--mp-red:#e63946;
+  --mp-text:#e2e8f0;--mp-muted:#94a3b8;--mp-line:rgba(124,58,237,.25);
+}
+body.phase-1 { background:var(--mp-bg) !important; color:var(--mp-text) !important; }
+body.phase-1::before { background: radial-gradient(900px 500px at 60% -5%, rgba(124,58,237,.18), transparent 60%), radial-gradient(600px 400px at 10% 30%, rgba(247,147,26,.1), transparent 60%) !important; }
+
+/* ---- 5-SECOND COLOR SHIFT ---- */
+body.phase-transition {
+  transition: background 1.2s ease, color 1.2s ease;
+}
+
+/* ---- MEMPOOL DASHBOARD (Phase 1) ---- */
+.mp-dashboard {
+  transition: transform 1.6s cubic-bezier(.7,0,.3,1), opacity 1.2s ease;
+  transform: translateY(0);
+  opacity: 1;
+}
+.mp-dashboard.slide-to-bottom {
+  transform: translateY(110vh);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---- MEMPOOL.SPACE STYLE COMPONENTS ---- */
+.mp-hero { padding: 40px 0 30px; }
+.mp-hero h1 {
+  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(36px,5vw,64px);
+  color:var(--mp-text,var(--ice));
+}
+body.phase-1 .mp-hero h1 { color:#e2e8f0; }
+.mp-hero .mp-sub { color:var(--mp-muted,var(--muted));font-size:14px;margin-top:8px;font-family:'JetBrains Mono',monospace;letter-spacing:.08em }
+
+.mp-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:24px }
+.mp-stat {
+  padding:20px;border-radius:12px;
+  background:var(--mp-panel,var(--panel));
+  border:1px solid var(--mp-line,var(--line));
+  position:relative;overflow:hidden;
+}
+body.phase-1 .mp-stat { background:#2a2d3e;border-color:rgba(124,58,237,.25); }
+.mp-stat::before{content:"";position:absolute;inset:0;background:var(--gloss);pointer-events:none}
+.mp-stat-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--mp-muted,var(--muted));margin-bottom:10px}
+.mp-stat-val{font-family:'Chakra Petch',sans-serif;font-size:28px;font-weight:700;color:var(--mp-green,var(--cyan))}
+body.phase-1 .mp-stat-val { color:#00c087; }
+.mp-stat-unit{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mp-muted,var(--muted));margin-top:4px}
+
+.mp-fee-bars { display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px }
+.mp-fee {
+  flex:1;min-width:140px;padding:16px;border-radius:12px;
+  background:var(--mp-panel,var(--panel));border:1px solid var(--mp-line,var(--line));
+  text-align:center;position:relative;overflow:hidden;
+}
+body.phase-1 .mp-fee { background:#2a2d3e; }
+.mp-fee::before{content:"";position:absolute;inset:0;background:var(--gloss);pointer-events:none}
+.mp-fee-tier{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px}
+.mp-fee-val{font-family:'Chakra Petch',sans-serif;font-size:26px;font-weight:700}
+.mp-fee-unit{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mp-muted,var(--muted));margin-top:3px}
+.fee-fast .mp-fee-tier{color:#e63946}.fee-fast .mp-fee-val{color:#e63946}
+.fee-half .mp-fee-tier{color:#f7931a}.fee-half .mp-fee-val{color:#f7931a}
+.fee-hour .mp-fee-tier{color:#f59e0b}.fee-hour .mp-fee-val{color:#f59e0b}
+.fee-eco .mp-fee-tier{color:#00c087}.fee-eco .mp-fee-val{color:#00c087}
+
+/* BLOCK ROW */
+.mp-blocks {
+  display:flex;gap:10px;overflow-x:auto;padding:4px 4px 16px;
+  scrollbar-width:thin;scrollbar-color:var(--line) transparent;
+}
+.mp-block {
+  flex:0 0 140px;padding:16px;border-radius:12px;
+  background:var(--mp-panel,var(--panel));border:1px solid var(--mp-line,var(--line));
+  position:relative;overflow:hidden;
+}
+body.phase-1 .mp-block { background:#2a2d3e; }
+.mp-block::before{content:"";position:absolute;inset:0;background:var(--gloss);pointer-events:none}
+.mp-block-height{font-family:'Chakra Petch',sans-serif;font-size:17px;color:var(--mp-accent,var(--cyan))}
+body.phase-1 .mp-block-height{color:#7c3aed}
+.mp-block-time{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--mp-muted,var(--muted));margin-top:4px}
+.mp-block-tx{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mp-green,var(--cyan));margin-top:8px}
+body.phase-1 .mp-block-tx{color:#00c087}
+.mp-block-size{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mp-muted,var(--muted));margin-top:3px}
+
+/* ---- QR CODE SECTION ---- */
+.qr-row {
+  display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:start;
+  margin-bottom:28px;
+}
+@media(max-width:640px){.qr-row{grid-template-columns:1fr}}
+.qr-cards { display:flex;gap:14px;flex-wrap:wrap }
+.qr-card {
+  padding:16px;border-radius:14px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  text-align:center;position:relative;cursor:pointer;
+  transition:transform .2s,box-shadow .2s;
+}
+body.phase-1 .qr-card{background:#2a2d3e;border-color:rgba(124,58,237,.3)}
+.qr-card:hover{transform:scale(1.04);box-shadow:0 0 32px var(--cyan-glow)}
+.qr-card .qr-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+.qr-inner{width:140px;height:140px;background:#fff;border-radius:8px;overflow:hidden;position:relative}
+.qr-inner canvas,.qr-inner img{display:block;width:100%;height:100%}
+.qr-card .qr-copy{
+  margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;
+  color:var(--cyan);cursor:pointer;transition:color .15s;
+}
+.qr-card .qr-copy:hover{color:var(--ice);text-decoration:underline}
+.qr-tip-info { flex:1 }
+.qr-tip-info h3{font-family:'Chakra Petch',sans-serif;font-size:22px;margin-bottom:10px;color:var(--ice)}
+body.phase-1 .qr-tip-info h3{color:#e2e8f0}
+.qr-tip-info p{color:var(--muted);font-size:13px;line-height:1.65;max-width:440px}
+.addr-box{
+  margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  background:rgba(0,229,255,.05);border:1px solid var(--line);border-radius:8px;
+  padding:10px 14px;color:var(--cyan);word-break:break-all;line-height:1.6;
+  cursor:pointer;transition:background .15s;
+}
+body.phase-1 .addr-box{background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.3);color:#a78bfa}
+.addr-box:hover{background:rgba(0,229,255,.1)}
+.addr-box .addr-label{color:var(--muted);font-size:9px;letter-spacing:.2em;text-transform:uppercase;display:block;margin-bottom:4px}
+
+/* ---- FULLSCREEN QR OVERLAY ---- */
+#qr-overlay{
+  display:none;position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.92);backdrop-filter:blur(10px);
+  place-items:center;cursor:pointer;flex-direction:column;gap:20px;
+}
+#qr-overlay.show{display:flex}
+#qr-overlay .qr-big{width:min(340px,80vw);height:min(340px,80vw);background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 0 60px rgba(255,255,255,.2)}
+#qr-overlay .qr-big canvas,#qr-overlay .qr-big img{display:block;width:100%;height:100%}
+#qr-overlay .qr-close{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:rgba(255,255,255,.5);margin-top:12px}
+
+/* ---- PHASE 2 TRANSITION TIMER ---- */
+.phase-timer {
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;
+  color:var(--muted);z-index:50;opacity:.7;
+  transition:opacity .5s;
+}
+.phase-timer.hide{opacity:0;pointer-events:none}
+
+/* ---- COLORED ROWS SECTION ---- */
+.colored-rows-section {
+  position:relative;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(80px);
+  transition:opacity 1.2s ease, transform 1.2s ease;
+}
+.colored-rows-section.visible {
+  opacity:1;pointer-events:auto;transform:translateY(0);
+}
+.mp-row-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px}
+.mp-color-row{
+  position:relative;height:44px;border-radius:8px;overflow:hidden;
+  margin-bottom:12px;
+  box-shadow:0 4px 18px rgba(0,0,0,.4);
+}
+.mp-color-row .row-track{
+  display:flex;gap:2px;align-items:stretch;height:100%;
+  will-change:transform;
+}
+.tx-block{
+  flex-shrink:0;height:100%;border-radius:3px;
+  transition:filter .3s;
+  cursor:pointer;
+}
+.tx-block:hover{filter:brightness(1.4) saturate(1.3)}
+.row-fee-tag{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;
+  background:rgba(0,0,0,.5);padding:3px 8px;border-radius:4px;
+  backdrop-filter:blur(4px);pointer-events:none;
+}
+
+/* ---- LAVA LAMP SECTION ---- */
+.lava-section {
+  opacity:0;pointer-events:none;
+  transform:translateY(60px);
+  transition:opacity 1.4s ease, transform 1.4s ease;
+  padding-top:48px;
+}
+.lava-section.visible{opacity:1;pointer-events:auto;transform:translateY(0)}
+.lava-grid{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:24px;padding-bottom:40px}
+
+/* Lava lamp container */
+.lava-lamp {
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  cursor:pointer;transition:transform .2s;
+  width:110px;
+}
+.lava-lamp:hover{transform:scale(1.06)}
+.lamp-body {
+  position:relative;width:80px;height:210px;
+  border-radius:0 0 40px 40px;overflow:hidden;
+  box-shadow:0 0 30px var(--lamp-glow,rgba(255,100,0,.3)), inset 0 0 20px rgba(0,0,0,.3);
+}
+.lamp-glass {
+  position:absolute;inset:0;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,.18) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(255,255,255,.10) 100%
+  );
+  z-index:3;pointer-events:none;border-radius:inherit;
+}
+.lamp-liquid{position:absolute;inset:0;background:var(--lamp-base,#1a0505);z-index:1}
+.lamp-blob{
+  position:absolute;border-radius:50%;z-index:2;
+  background:var(--lamp-color,#ff4500);
+  filter:blur(2px);
+  animation:blobRise var(--dur,7s) ease-in-out infinite;
+  box-shadow:0 0 12px var(--lamp-glow,rgba(255,69,0,.5));
+}
+@keyframes blobRise{
+  0%{transform:translateY(0) scaleX(1);border-radius:50%}
+  20%{transform:translateY(-25%) scaleX(1.1);border-radius:55% 45% 48% 52%}
+  40%{transform:translateY(-55%) scaleX(.9);border-radius:45% 55% 52% 48%}
+  55%{transform:translateY(-75%) scaleX(1.05);border-radius:52% 48% 45% 55%}
+  70%{transform:translateY(-88%) scaleX(.95);border-radius:48% 52% 55% 45%}
+  85%{transform:translateY(-70%) scaleX(1.1);border-radius:50% 50% 48% 52%}
+  100%{transform:translateY(0) scaleX(1);border-radius:50%}
+}
+.lamp-cap{
+  width:88px;height:12px;border-radius:3px;
+  background:linear-gradient(90deg,#888,#ccc,#888);
+  box-shadow:0 2px 6px rgba(0,0,0,.5);
+}
+.lamp-base-stand{
+  width:70px;height:16px;border-radius:3px 3px 6px 6px;
+  background:linear-gradient(90deg,#666,#aaa,#666);
+  box-shadow:0 2px 6px rgba(0,0,0,.5);
+}
+.lamp-name{font-family:'Chakra Petch',sans-serif;font-size:13px;color:var(--ice);text-align:center}
+[data-theme="light"] .lamp-name{color:var(--text)}
+.lamp-price{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);text-align:center}
+.lamp-buy{
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.1em;
+  padding:5px 12px;border-radius:6px;background:rgba(0,229,255,.08);
+  border:1px solid var(--line);color:var(--cyan);cursor:pointer;
+  transition:background .15s,color .15s;text-decoration:none;display:inline-block;
+  text-align:center;
+}
+.lamp-buy:hover{background:var(--cyan);color:#021014}
+
+/* ---- MEMPOOL ATTRIBUTION ---- */
+.mp-attribution{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  color:var(--muted);text-align:center;padding:16px;letter-spacing:.08em;
+}
+.mp-attribution a{color:var(--cyan)}
+</style>
+</head>
+<body class="phase-1">
+
+<!-- FULLSCREEN QR OVERLAY -->
+<div id="qr-overlay" onclick="closeQR()">
+  <div class="qr-big" id="qr-big-inner"></div>
+  <div class="qr-close">tap anywhere to close · minimize</div>
+</div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="spark"></span><b>THE&nbsp;<span>BIT</span>&nbsp;LIFE</b></a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-pill">Home</a>
+      <a href="shop.html" class="nav-pill">Shop</a>
+      <a href="bookstore.html" class="nav-pill">Bookstore</a>
+      <a href="media.html" class="nav-pill">Media</a>
+      <a href="projects.html" class="nav-pill">Projects</a>
+      <a href="signal.html" class="nav-pill">The Signal</a>
+      <a href="mempool.html" class="nav-pill">Mempool</a>
+    </div>
+    <div class="nav-right">
+      <a href="shop.html" class="nav-cta">Shop the Drop</a>
+      <div class="theme-toggle"><span class="icon icon-moon">🌙</span><div class="toggle-track" id="toggle-track"><div class="toggle-thumb"></div></div><span class="icon icon-sun" style="opacity:.35">☀️</span></div>
+    </div>
+  </div>
+</nav>
+<div class="sitewall" id="sitewall"></div>
+
+<!-- PHASE TIMER -->
+<div class="phase-timer" id="phase-timer">⚡ changing colors in <span id="timer-count">5</span>s</div>
+
+<!-- ======================== MEMPOOL DASHBOARD (Phase 1) ======================== -->
+<div class="mp-dashboard" id="mp-dashboard">
+<div class="wrap">
+
+  <!-- HERO + QR CODES -->
+  <div class="mp-hero">
+    <div class="qr-row">
+      <div class="qr-cards">
+        <!-- NPUB QR -->
+        <div class="qr-card" id="qr-npub-card" onclick="openQR('npub')">
+          <div class="qr-label">Nostr Public Key</div>
+          <div class="qr-inner" id="qr-npub"></div>
+          <div class="qr-copy" onclick="event.stopPropagation();copyText('npub15jnskzcd5tga5rq2w0af0h46tf6lzkdkxjh58hewqrdglt0a0jkq9ygv88','NPUB copied!')">copy npub</div>
+        </div>
+        <!-- ARK QR -->
+        <div class="qr-card" id="qr-ark-card" onclick="openQR('ark')">
+          <div class="qr-label">Ark / Lightning Address</div>
+          <div class="qr-inner" id="qr-ark"></div>
+          <div class="qr-copy" onclick="event.stopPropagation();copyText('ark1qq4hfssprtcgnjzf8qlw2f78yvjau5kldfugg29k34y7j96q2w4t4zrcwh28cf2vfdpdf7kk9l8n92clx05arz479cn8t4l8zjat7xs5zk7z6h','Ark address copied!')">copy ark address</div>
+        </div>
+      </div>
+      <div class="qr-tip-info">
+        <h3>🌋 Order a Lava Lamp</h3>
+        <p>Tip the addresses below with the message <strong style="color:var(--cyan)">"lava lamp"</strong> to receive your custom mempool lava lamp. Hover the QR code to expand for scanning.</p>
+        <div class="addr-box" onclick="copyText('npub15jnskzcd5tga5rq2w0af0h46tf6lzkdkxjh58hewqrdglt0a0jkq9ygv88','NPUB copied!')">
+          <span class="addr-label">Nostr NPUB (click to copy)</span>
+          npub15jnskzcd5tga5rq2w0af0h46tf6lzkdkxjh58hewqrdglt0a0jkq9ygv88
+        </div>
+        <div class="addr-box" style="margin-top:8px" onclick="copyText('ark1qq4hfssprtcgnjzf8qlw2f78yvjau5kldfugg29k34y7j96q2w4t4zrcwh28cf2vfdpdf7kk9l8n92clx05arz479cn8t4l8zjat7xs5zk7z6h','Ark address copied!')">
+          <span class="addr-label">Ark Address (click to copy)</span>
+          ark1qq4hfssprtcgnjzf8qlw2f78yvjau5kldfugg29k34y7j96q2w4t4zrcwh28cf2vfdpdf7kk9l8n92clx05arz479cn8t4l8zjat7xs5zk7z6h
+        </div>
+      </div>
+    </div>
+    <h1 class="mp-hero">mempool.space</h1>
+    <div class="mp-sub">Live Bitcoin mempool data · powered by <a href="https://mempool.space" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">mempool.space</a> public API</div>
+  </div>
+
+  <!-- FEE BARS -->
+  <div class="mp-fee-bars" id="fee-bars">
+    <div class="mp-fee fee-fast"><div class="mp-fee-tier">Fastest</div><div class="mp-fee-val" id="fee-fast">—</div><div class="mp-fee-unit">sat/vB</div></div>
+    <div class="mp-fee fee-half"><div class="mp-fee-tier">30 min</div><div class="mp-fee-val" id="fee-half">—</div><div class="mp-fee-unit">sat/vB</div></div>
+    <div class="mp-fee fee-hour"><div class="mp-fee-tier">1 hour</div><div class="mp-fee-val" id="fee-hour">—</div><div class="mp-fee-unit">sat/vB</div></div>
+    <div class="mp-fee fee-eco"><div class="mp-fee-tier">Economy</div><div class="mp-fee-val" id="fee-eco">—</div><div class="mp-fee-unit">sat/vB</div></div>
+  </div>
+
+  <!-- MEMPOOL STATS -->
+  <div class="mp-grid" id="mp-stats">
+    <div class="mp-stat"><div class="mp-stat-label">Pending Transactions</div><div class="mp-stat-val" id="stat-txcount">—</div><div class="mp-stat-unit">unconfirmed</div></div>
+    <div class="mp-stat"><div class="mp-stat-label">Mempool Size</div><div class="mp-stat-val" id="stat-vsize">—</div><div class="mp-stat-unit">vMB</div></div>
+    <div class="mp-stat"><div class="mp-stat-label">Total Fees</div><div class="mp-stat-val" id="stat-fees">—</div><div class="mp-stat-unit">BTC pending</div></div>
+    <div class="mp-stat"><div class="mp-stat-label">Block Height</div><div class="mp-stat-val" id="stat-height">—</div><div class="mp-stat-unit">current tip</div></div>
+  </div>
+
+  <!-- RECENT BLOCKS -->
+  <div class="shead" style="margin-bottom:14px">
+    <div><div class="lbl" id="blocks-lbl" style="color:#7c3aed">// Recent blocks</div><h2 style="font-size:26px">Latest blocks.</h2></div>
+    <a href="https://mempool.space/blocks" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:12px">View all →</a>
+  </div>
+  <div class="mp-blocks" id="mp-blocks">
+    <div style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px;padding:16px">Loading blocks…</div>
+  </div>
+
+  <div class="mp-attribution">
+    Data sourced from <a href="https://mempool.space" target="_blank" rel="noopener">mempool.space</a> open-source API · <a href="https://github.com/mempool/mempool" target="_blank" rel="noopener">github.com/mempool/mempool</a>
+  </div>
+
+</div><!-- /wrap -->
+</div><!-- /mp-dashboard -->
+
+<!-- ======================== COLORED ROWS SECTION (Phase 2) ======================== -->
+<div class="colored-rows-section" id="colored-rows">
+<div class="wrap">
+  <div class="shead" style="margin-bottom:20px">
+    <div><div class="lbl">// Mempool visualization</div><h2>Fee landscape.</h2></div>
+    <p style="font-size:13px">Each row = a fee tier · each block = a transaction · colors shift by confirmation time</p>
+  </div>
+  <div id="row-container"></div>
+</div>
+</div>
+
+<!-- ======================== LAVA LAMP STORE (Phase 2) ======================== -->
+<div class="lava-section" id="lava-section">
+<div class="wrap">
+  <div class="shead">
+    <div>
+      <div class="lbl">// Lava Lamp Store</div>
+      <h2>Get your lava lamp.</h2>
+    </div>
+    <div style="text-align:right">
+      <p style="font-size:13px;color:var(--muted)">Tip with message <b style="color:var(--cyan)">"lava lamp"</b> to order</p>
+      <div style="display:flex;gap:10px;margin-top:8px;justify-content:flex-end;flex-wrap:wrap">
+        <span class="btn btn-ghost" style="font-size:11px;cursor:pointer" onclick="copyText('npub15jnskzcd5tga5rq2w0af0h46tf6lzkdkxjh58hewqrdglt0a0jkq9ygv88','NPUB copied!')">Copy NPUB</span>
+        <span class="btn btn-primary" style="font-size:11px;cursor:pointer" onclick="copyText('ark1qq4hfssprtcgnjzf8qlw2f78yvjau5kldfugg29k34y7j96q2w4t4zrcwh28cf2vfdpdf7kk9l8n92clx05arz479cn8t4l8zjat7xs5zk7z6h','Ark address copied!')">Copy Ark Address</span>
+      </div>
+    </div>
+  </div>
+  <div class="lava-grid" id="lava-grid"></div>
+</div>
+</div>
+
+<footer style="margin-top:48px">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand"><span class="spark"></span><b>THE&nbsp;<span>BIT</span>&nbsp;LIFE</b></a>
+        <p>Mempool data from mempool.space open API. Lava lamps powered by Lightning + Ark.</p>
+        <div class="foot-oss"><a href="https://github.com/fourthSol/thebitlife" target="_blank" rel="noopener">github.com/fourthSol/thebitlife</a> · Open source · PRs welcome</div>
+      </div>
+    </div>
+    <div class="foot-base"><span>© 2026 THE BIT LIFE</span><span>MEMPOOL DATA: MEMPOOL.SPACE</span></div>
+  </div>
+</footer>
+
+<script src="js/shared.js"></script>
+<script>
+/* ---- GENERATE QR CODES ---- */
+const NPUB = 'npub15jnskzcd5tga5rq2w0af0h46tf6lzkdkxjh58hewqrdglt0a0jkq9ygv88';
+const ARK  = 'ark1qq4hfssprtcgnjzf8qlw2f78yvjau5kldfugg29k34y7j96q2w4t4zrcwh28cf2vfdpdf7kk9l8n92clx05arz479cn8t4l8zjat7xs5zk7z6h';
+
+function makeQR(elId, data, small=true){
+  const el = document.getElementById(elId);
+  if(!el || typeof QRCode === 'undefined') return;
+  el.innerHTML = '';
+  new QRCode(el, {
+    text: data,
+    width: small ? 136 : 320,
+    height: small ? 136 : 320,
+    colorDark: '#000000',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+}
+
+window.addEventListener('load', ()=>{
+  if(typeof QRCode !== 'undefined'){
+    makeQR('qr-npub', NPUB, true);
+    makeQR('qr-ark', ARK, true);
+  }
+});
+
+/* ---- FULLSCREEN QR ---- */
+let currentQRData = '';
+function openQR(which){
+  const data = which === 'npub' ? NPUB : ARK;
+  currentQRData = data;
+  const overlay = document.getElementById('qr-overlay');
+  const big = document.getElementById('qr-big-inner');
+  big.innerHTML = '';
+  if(typeof QRCode !== 'undefined'){
+    new QRCode(big, {text:data, width:320, height:320, colorDark:'#000', colorLight:'#fff', correctLevel:QRCode.CorrectLevel.M});
+  }
+  overlay.classList.add('show');
+}
+function closeQR(){ document.getElementById('qr-overlay').classList.remove('show'); }
+
+/* ---- COPY TO CLIPBOARD ---- */
+function copyText(text, msg){
+  navigator.clipboard.writeText(text).then(()=>{
+    const n = document.createElement('div');
+    n.style.cssText='position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#00E5FF;color:#021014;font-family:JetBrains Mono,monospace;font-size:12px;letter-spacing:.1em;padding:10px 22px;border-radius:8px;z-index:9999;box-shadow:0 4px 20px rgba(0,229,255,.4)';
+    n.textContent = msg || 'Copied!';
+    document.body.appendChild(n);
+    setTimeout(()=>n.remove(), 2000);
+  });
+}
+
+/* ---- FETCH MEMPOOL DATA ---- */
+async function fetchMempoolData(){
+  const BASE = 'https://mempool.space/api';
+  try {
+    const [fees, mempool, blocks, height] = await Promise.all([
+      fetch(BASE+'/v1/fees/recommended').then(r=>r.json()).catch(()=>null),
+      fetch(BASE+'/mempool').then(r=>r.json()).catch(()=>null),
+      fetch(BASE+'/blocks').then(r=>r.json()).catch(()=>[]),
+      fetch(BASE+'/blocks/tip/height').then(r=>r.text()).catch(()=>'—'),
+    ]);
+
+    if(fees){
+      document.getElementById('fee-fast').textContent = fees.fastestFee;
+      document.getElementById('fee-half').textContent = fees.halfHourFee;
+      document.getElementById('fee-hour').textContent = fees.hourFee;
+      document.getElementById('fee-eco').textContent  = fees.economyFee;
+    }
+    if(mempool){
+      document.getElementById('stat-txcount').textContent = Number(mempool.count).toLocaleString();
+      document.getElementById('stat-vsize').textContent   = (mempool.vsize/1e6).toFixed(2);
+      document.getElementById('stat-fees').textContent    = (mempool.total_fee/1e8).toFixed(4);
+    }
+    if(height) document.getElementById('stat-height').textContent = Number(height).toLocaleString();
+
+    if(Array.isArray(blocks) && blocks.length){
+      renderBlocks(blocks.slice(0,8));
+    }
+  } catch(e){ console.warn('Mempool fetch failed', e); }
+}
+
+function renderBlocks(blocks){
+  const el = document.getElementById('mp-blocks');
+  const ago = ts => {
+    const s = Math.floor(Date.now()/1000 - ts);
+    if(s < 60) return s+'s ago';
+    if(s < 3600) return Math.floor(s/60)+'m ago';
+    return Math.floor(s/3600)+'h ago';
+  };
+  el.innerHTML = blocks.map(b=>`
+    <a class="mp-block" href="https://mempool.space/block/${b.id}" target="_blank" rel="noopener">
+      <div class="mp-block-height">#${Number(b.height).toLocaleString()}</div>
+      <div class="mp-block-time">${ago(b.timestamp)}</div>
+      <div class="mp-block-tx">${Number(b.tx_count).toLocaleString()} txs</div>
+      <div class="mp-block-size">${(b.size/1e6).toFixed(2)} MB</div>
+    </a>
+  `).join('');
+}
+
+fetchMempoolData();
+setInterval(fetchMempoolData, 30000);
+
+/* ---- 5-SECOND PHASE TRANSITION ---- */
+let countdown = 5;
+const timerEl = document.getElementById('timer-count');
+const timerWrap = document.getElementById('phase-timer');
+
+const countInterval = setInterval(()=>{
+  countdown--;
+  if(timerEl) timerEl.textContent = countdown;
+  if(countdown <= 0){
+    clearInterval(countInterval);
+    timerWrap.classList.add('hide');
+    triggerPhase2();
+  }
+}, 1000);
+
+function triggerPhase2(){
+  // Color shift: remove phase-1, transition to site theme
+  document.body.classList.add('phase-transition');
+  setTimeout(()=>{ document.body.classList.remove('phase-1'); }, 100);
+
+  // Slide mempool dashboard down
+  setTimeout(()=>{
+    document.getElementById('mp-dashboard').classList.add('slide-to-bottom');
+  }, 600);
+
+  // Show colored rows (animate up)
+  setTimeout(()=>{
+    document.getElementById('colored-rows').classList.add('visible');
+    renderColoredRows();
+  }, 1400);
+
+  // Show lava lamp section
+  setTimeout(()=>{
+    document.getElementById('lava-section').classList.add('visible');
+    renderLavaLamps();
+  }, 2800);
+}
+
+/* ---- COLORED MEMPOOL ROWS ---- */
+const ROW_CONFIGS = [
+  {label:'1 sat/vB  — Minimum',    color:'#6EE7B7', bg:'rgba(110,231,183,.12)', fee:'1'},
+  {label:'2 sat/vB  — Economy',    color:'#34D399', bg:'rgba(52,211,153,.12)',  fee:'2'},
+  {label:'5 sat/vB  — Low',        color:'#0EA5E9', bg:'rgba(14,165,233,.12)',  fee:'5'},
+  {label:'10 sat/vB — Standard',   color:'#00E5FF', bg:'rgba(0,229,255,.12)',   fee:'10'},
+  {label:'15 sat/vB — Normal',     color:'#818CF8', bg:'rgba(129,140,248,.12)', fee:'15'},
+  {label:'25 sat/vB — Medium',     color:'#A78BFA', bg:'rgba(167,139,250,.12)', fee:'25'},
+  {label:'50 sat/vB — Above avg',  color:'#F472B6', bg:'rgba(244,114,182,.12)', fee:'50'},
+  {label:'100 sat/vB — High',      color:'#FB923C', bg:'rgba(251,146,60,.12)',  fee:'100'},
+  {label:'200 sat/vB — Priority',  color:'#F97316', bg:'rgba(249,115,22,.12)',  fee:'200'},
+  {label:'500+ sat/vB — Urgent',   color:'#EF4444', bg:'rgba(239,68,68,.12)',   fee:'500+'},
+];
+
+function renderColoredRows(){
+  const container = document.getElementById('row-container');
+  const txCounts = [220,180,310,260,140,95,60,40,22,12];
+
+  ROW_CONFIGS.forEach((row, ri)=>{
+    const wrap = document.createElement('div');
+    wrap.style.cssText = `opacity:0;transform:translateY(30px);transition:opacity .6s ease ${ri*.12}s, transform .6s ease ${ri*.12}s`;
+
+    const label = document.createElement('div');
+    label.className = 'mp-row-label';
+    label.style.color = row.color;
+    label.textContent = row.label;
+
+    const rowEl = document.createElement('div');
+    rowEl.className = 'mp-color-row';
+    rowEl.style.background = row.bg;
+    rowEl.style.borderLeft = `3px solid ${row.color}`;
+
+    const track = document.createElement('div');
+    track.className = 'row-track';
+
+    const n = txCounts[ri];
+    for(let i=0; i<n; i++){
+      const blk = document.createElement('div');
+      blk.className = 'tx-block';
+      const w = 4 + Math.random()*20;
+      blk.style.width = w+'px';
+      blk.style.background = row.color;
+      blk.style.opacity = (0.4 + Math.random()*0.6).toFixed(2);
+      track.appendChild(blk);
+    }
+
+    const feeTag = document.createElement('div');
+    feeTag.className = 'row-fee-tag';
+    feeTag.style.color = row.color;
+    feeTag.textContent = row.fee+' sat/vB';
+
+    rowEl.appendChild(track);
+    rowEl.appendChild(feeTag);
+    wrap.appendChild(label);
+    wrap.appendChild(rowEl);
+    container.appendChild(wrap);
+
+    // Animate row track scrolling
+    let off = 0;
+    const speed = 0.3 + ri*0.08;
+    (function animRow(){
+      off -= speed;
+      const maxOff = track.scrollWidth / 2;
+      if(-off >= maxOff) off = 0;
+      track.style.transform = `translateX(${off}px)`;
+      requestAnimationFrame(animRow);
+    })();
+
+    // Stagger in
+    setTimeout(()=>{
+      wrap.style.opacity = '1';
+      wrap.style.transform = 'translateY(0)';
+    }, ri * 120 + 100);
+  });
+}
+
+/* ---- LAVA LAMPS ---- */
+const LAMPS = [
+  {name:'Classic Red',   lampColor:'#FF2200',base:'#1a0000',glow:'rgba(255,34,0,.45)',   blobs:['#FF4400','#FF6622','#FF2200']},
+  {name:'Ocean Blue',    lampColor:'#0088FF',base:'#00050f',glow:'rgba(0,136,255,.45)',  blobs:['#00AAFF','#0066DD','#22CCFF']},
+  {name:'Lava Green',    lampColor:'#00FF88',base:'#001a0a',glow:'rgba(0,255,136,.4)',   blobs:['#00EE77','#22FF99','#00CC66']},
+  {name:'Sunset',        lampColor:'#FF6B35',base:'#1a0800',glow:'rgba(255,107,53,.45)',  blobs:['#FF8C42','#FF5500','#FFB347']},
+  {name:'Deep Purple',   lampColor:'#9459FF',base:'#0a000f',glow:'rgba(148,89,255,.45)', blobs:['#AA66FF','#7733FF','#CC88FF']},
+  {name:'Gold',          lampColor:'#FFD400',base:'#1a1000',glow:'rgba(255,212,0,.45)',  blobs:['#FFEE00','#FFB800','#FFD900']},
+  {name:'Magenta',       lampColor:'#FF00AA',base:'#1a0010',glow:'rgba(255,0,170,.45)',  blobs:['#FF22BB','#DD0088','#FF55CC']},
+  {name:'Arctic',        lampColor:'#00E5FF',base:'#000d1a',glow:'rgba(0,229,255,.45)',  blobs:['#22EEFF','#00CCEE','#88F8FF']},
+];
+
+function renderLavaLamps(){
+  const grid = document.getElementById('lava-grid');
+  grid.innerHTML = LAMPS.map((lamp,li)=>{
+    const blobsHTML = lamp.blobs.map((bc,bi)=>{
+      const sz = 36 + Math.random()*28;
+      const left = 8 + Math.random()*28;
+      const delay = -(bi * 2.3 + li * 0.5);
+      const dur = 5.5 + Math.random()*4;
+      return `<div class="lamp-blob" style="width:${sz}px;height:${sz}px;left:${left}px;bottom:${10+bi*20}px;background:${bc};--dur:${dur}s;animation-delay:${delay}s;--lamp-glow:${lamp.glow}"></div>`;
+    }).join('');
+    return `
+      <div class="lava-lamp">
+        <div class="lamp-cap"></div>
+        <div class="lamp-body" style="--lamp-color:${lamp.lampColor};--lamp-base:${lamp.base};--lamp-glow:${lamp.glow};background:${lamp.base}">
+          <div class="lamp-liquid"></div>
+          ${blobsHTML}
+          <div class="lamp-glass"></div>
+        </div>
+        <div class="lamp-base-stand"></div>
+        <div class="lamp-name">${lamp.name}</div>
+        <div class="lamp-price">tip "lava lamp"</div>
+        <span class="lamp-buy" onclick="copyText('ark1qq4hfssprtcgnjzf8qlw2f78yvjau5kldfugg29k34y7j96q2w4t4zrcwh28cf2vfdpdf7kk9l8n92clx05arz479cn8t4l8zjat7xs5zk7z6h','Ark address copied! Now tip with message: lava lamp')">Order ⚡</span>
+      </div>
+    `;
+  }).join('');
+}
+
+/* Override phase-1 styles with site theme for lbl when phase-2 */
+document.addEventListener('DOMContentLoaded', ()=>{
+  const lblEl = document.getElementById('blocks-lbl');
+  if(lblEl){
+    setTimeout(()=>{ lblEl.style.color = 'var(--cyan)'; }, 5600);
+  }
+});
+</script>
+</body>
+</html>

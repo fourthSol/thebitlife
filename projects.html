@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — THE BIT LIFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/shared.css">
+<style>
+.hero{padding:80px 0 50px}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(52px,9vw,112px);line-height:.92;background:linear-gradient(178deg,#fff 0%,#bff6ff 28%,var(--cyan) 62%,var(--cyan-deep) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 8px 36px rgba(0,229,255,.2))}
+[data-theme="light"] .hero h1{background:linear-gradient(178deg,#001830 0%,var(--cyan) 70%,var(--cyan-deep) 100%);-webkit-background-clip:text;background-clip:text}
+.hero-sub{max-width:560px;margin:22px 0 0;color:var(--muted);font-size:16px;line-height:1.65}
+
+/* STATUS BADGES */
+.status{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+.status-live{background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.3);color:#00e676}
+.status-active{background:rgba(255,212,0,.1);border:1px solid rgba(255,212,0,.3);color:#ffd400}
+.status-planned{background:rgba(110,130,140,.1);border:1px solid rgba(110,130,140,.2);color:var(--muted)}
+.status-soon{background:rgba(0,229,255,.08);border:1px solid var(--line);color:var(--cyan)}
+.status-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+
+/* PROJECT ROWS (staging board) */
+.project-rows{display:flex;flex-direction:column;gap:0}
+.proj-row{
+  display:grid;grid-template-columns:180px 1fr auto;gap:24px;align-items:start;
+  padding:22px 16px;border-bottom:1px solid var(--line-soft);
+  transition:background .18s;
+  position:relative;
+}
+.proj-row:first-child{border-top:1px solid var(--line-soft)}
+.proj-row:hover{background:rgba(0,229,255,.025)}
+@media(max-width:720px){.proj-row{grid-template-columns:1fr;gap:10px}}
+.proj-number{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--muted);position:absolute;left:16px;top:24px}
+.proj-row{padding-left:52px}
+.proj-name{font-family:'Chakra Petch',sans-serif;font-size:17px;color:var(--ice);line-height:1.2;margin-bottom:4px}
+[data-theme="light"] .proj-name{color:var(--text)}
+.proj-tag{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+.proj-desc{font-size:13.5px;color:var(--muted);line-height:1.6;max-width:520px}
+.proj-meta{display:flex;flex-direction:column;gap:8px;align-items:flex-end;min-width:130px}
+@media(max-width:720px){.proj-meta{align-items:flex-start}}
+.proj-link{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;color:var(--ice);border:1px solid var(--line);border-radius:6px;padding:7px 12px;transition:.2s;white-space:nowrap;text-decoration:none;display:inline-block}
+.proj-link:hover{background:var(--cyan);color:#021014;border-color:var(--cyan)}
+
+/* BIP TABLE */
+.bip-table{width:100%;border-collapse:collapse}
+.bip-table th{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--cyan);text-transform:uppercase;padding:10px 14px;border-bottom:1px solid var(--line);text-align:left;font-weight:500}
+[data-theme="light"] .bip-table th{color:var(--cyan-deep)}
+.bip-table td{padding:14px 14px;border-bottom:1px solid var(--line-soft);font-size:13.5px;color:var(--muted);vertical-align:top}
+.bip-table tr:hover td{background:rgba(0,229,255,.025)}
+.bip-table .bip-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--cyan);white-space:nowrap}
+[data-theme="light"] .bip-table .bip-num{color:var(--cyan-deep)}
+.bip-table .bip-title{font-family:'Chakra Petch',sans-serif;font-size:15px;color:var(--ice)}
+[data-theme="light"] .bip-table .bip-title{color:var(--text)}
+.bip-table .bip-link{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--cyan);text-decoration:none}
+.bip-table .bip-link:hover{text-decoration:underline}
+@media(max-width:700px){.bip-table .bip-desc{display:none}}
+
+/* FEATURED PROJECT CARD */
+.feat-proj{
+  border:1px solid rgba(148,93,255,.25);border-radius:20px;padding:36px;margin-bottom:24px;
+  background:linear-gradient(135deg,rgba(148,93,255,.06),rgba(0,229,255,.03));
+  box-shadow:0 20px 52px rgba(0,0,0,.5);position:relative;overflow:hidden;
+}
+.feat-proj::after{content:"";position:absolute;inset:0;background:var(--gloss);pointer-events:none}
+.feat-proj .feat-tag{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:#9459FF;background:rgba(148,93,255,.1);border:1px solid rgba(148,93,255,.25);padding:3px 9px;border-radius:4px;display:inline-block;margin-bottom:14px}
+.feat-proj h3{font-family:'Chakra Petch',sans-serif;font-size:clamp(22px,3.2vw,36px);margin-bottom:10px}
+.feat-proj p{color:var(--muted);font-size:14.5px;line-height:1.65;max-width:580px;margin-bottom:20px}
+.feat-proj .feat-specs{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:22px}
+.feat-proj .feat-spec b{display:block;font-family:'Chakra Petch',sans-serif;font-size:20px;color:var(--ice)}
+[data-theme="light"] .feat-proj .feat-spec b{color:var(--text)}
+.feat-proj .feat-spec span{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="spark"></span><b>THE&nbsp;<span>BIT</span>&nbsp;LIFE</b></a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-pill">Home</a>
+      <a href="shop.html" class="nav-pill">Shop</a>
+      <a href="bookstore.html" class="nav-pill">Bookstore</a>
+      <a href="media.html" class="nav-pill">Media</a>
+      <a href="projects.html" class="nav-pill">Projects</a>
+      <a href="signal.html" class="nav-pill">The Signal</a>
+      <a href="mempool.html" class="nav-pill">Mempool</a>
+    </div>
+    <div class="nav-right">
+      <a href="shop.html" class="nav-cta">Shop the Drop</a>
+      <div class="theme-toggle"><span class="icon icon-moon">🌙</span><div class="toggle-track" id="toggle-track"><div class="toggle-thumb"></div></div><span class="icon icon-sun" style="opacity:.35">☀️</span></div>
+    </div>
+  </div>
+</nav>
+<div class="sitewall" id="sitewall"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Staging board · open source · all directions welcome</div>
+    <h1>PROJECTS</h1>
+    <p class="hero-sub">Current Bitcoin protocol work, in-house projects, and the ecosystem of builders. From BIP drafts to shipping tools.</p>
+  </div>
+</header>
+
+<!-- FEATURED: NOSTR AI POOL -->
+<section>
+  <div class="wrap">
+    <div class="shead reveal">
+      <div><div class="lbl">// Flagship project</div><h2>In active development.</h2></div>
+    </div>
+    <div class="feat-proj reveal">
+      <div class="feat-tag">⚡ Active Development</div>
+      <h3>Nostr AI Inference Pool</h3>
+      <p>A distributed AI inference network running over Nostr Data Vending Machines (NIP-90). Pay per prompt via Lightning. No API keys, no central server, no corporate intermediary. Run your own inference node and earn sats for compute contributed to the network.</p>
+      <div class="feat-specs">
+        <div class="feat-spec"><b>NIP-90</b><span>DVMs</span></div>
+        <div class="feat-spec"><b>BOLT11/12</b><span>Payment</span></div>
+        <div class="feat-spec"><b>Open</b><span>Source</span></div>
+        <div class="feat-spec"><b>P2P</b><span>No middleman</span></div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="https://github.com/fourthSol/thebitlife" target="_blank" rel="noopener" class="btn btn-primary">Follow development →</a>
+        <a href="https://nostr.com" target="_blank" rel="noopener" class="btn btn-ghost">Nostr protocol</a>
+      </div>
+    </div>
+
+    <!-- IN-HOUSE PROJECT ROWS -->
+    <div class="shead reveal" style="margin-top:48px">
+      <div><div class="lbl">// In-house staging</div><h2>All projects.</h2></div>
+    </div>
+    <div class="project-rows reveal" id="project-rows"></div>
+  </div>
+</section>
+
+<!-- BIPs -->
+<section style="border-top:1px solid var(--line-soft)">
+  <div class="wrap">
+    <div class="shead reveal">
+      <div><div class="lbl">// Bitcoin Improvement Proposals</div><h2>Active BIPs.</h2></div>
+      <p>Current proposals in draft, active, or final status. The protocol evolves slowly and carefully.</p>
+    </div>
+    <div style="overflow-x:auto;border-radius:14px;border:1px solid var(--line-soft)" class="reveal">
+      <table class="bip-table">
+        <thead><tr><th>BIP</th><th>Title</th><th class="bip-desc">Summary</th><th>Status</th><th>Link</th></tr></thead>
+        <tbody id="bip-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM PROJECTS -->
+<section style="border-top:1px solid var(--line-soft)">
+  <div class="wrap">
+    <div class="shead reveal">
+      <div><div class="lbl">// Ecosystem</div><h2>Things going on.</h2></div>
+      <p>Notable projects in the broader Bitcoin ecosystem worth watching.</p>
+    </div>
+    <div class="project-rows reveal" id="eco-rows"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand"><span class="spark"></span><b>THE&nbsp;<span>BIT</span>&nbsp;LIFE</b></a>
+        <p>Open source staging board for Bitcoin projects and BIPs.</p>
+        <div class="foot-oss"><a href="https://github.com/fourthSol/thebitlife" target="_blank" rel="noopener">github.com/fourthSol/thebitlife</a> · PRs welcome · any direction</div>
+      </div>
+      <div class="foot-cols">
+        <div class="fcol"><h5>Pages</h5><a href="index.html">Home</a><a href="shop.html">Shop</a><a href="bookstore.html">Bookstore</a><a href="media.html">Media</a></div>
+      </div>
+    </div>
+    <div class="foot-base"><span>© 2026 THE BIT LIFE</span><span>BUILT ON 21,000,000</span></div>
+  </div>
+</footer>
+
+<script src="js/shared.js"></script>
+<script>
+const projects = [
+  {n:'001', name:'Nostr AI Inference Pool', tag:'Nostr · Lightning · AI', desc:'Distributed AI inference over NIP-90 DVMs. Pay-per-prompt via Lightning. Earn sats for compute.', status:'active', link:'https://github.com/fourthSol/thebitlife'},
+  {n:'002', name:'BTCPayServer Shoutbox', tag:'Lightning · Community', desc:'Real-time community shoutbox powered by BTCPayServer. Free for 1 week post-launch. Lightning-native.', status:'soon', link:null},
+  {n:'003', name:'Nostr Social Integration', tag:'Nostr · Decentralized', desc:'Full Nostr integration for The Bit Life — post, relay, follow without intermediaries.', status:'soon', link:null},
+  {n:'004', name:'BuddyPress Community Layer', tag:'Community · Self-Hosted', desc:'Sovereign forums, profiles, and groups. Self-hosted. No corporate infrastructure.', status:'planned', link:null},
+  {n:'005', name:'Proof of Wear Drop 03', tag:'Merch · Bitcoin', desc:'Twenty-one tees. Locked until block 900,000. Pay in BTC or Lightning.', status:'live', link:'shop.html'},
+  {n:'006', name:'Open Source Site', tag:'Dev · Open Source', desc:'This entire website is open source. PRs welcome. Mirrored on Nostr via Iris.to.', status:'live', link:'https://github.com/fourthSol/thebitlife'},
+];
+
+const ecoProjects = [
+  {n:'E01', name:'BOLT12 Offers Adoption', tag:'Lightning Protocol', desc:'Reusable payment codes for Lightning. Wallet and node support growing in Phoenix, Zeus, CLN.', status:'active', link:'https://bolt12.org'},
+  {n:'E02', name:'Core Lightning 24.x', tag:'Lightning · Blockstream', desc:'C implementation refactor complete. Leaner, production-grade. The "c-lightning" era ends.', status:'live', link:'https://corelightning.org'},
+  {n:'E03', name:'LDK v0.0.124', tag:'Lightning · Spiral', desc:"Spiral's Rust Lightning library. Async payment handling. Embed LN into any app.", status:'live', link:'https://lightningdevkit.org'},
+  {n:'E04', name:'Taproot Adoption Growth', tag:'Bitcoin Core', desc:'P2TR outputs and Schnorr signatures hitting new highs. Wallet support maturing.', status:'active', link:'https://taproot.watch'},
+  {n:'E05', name:'Fedimint', tag:'Lightning · Privacy', desc:'Federated Chaumian e-cash on top of Bitcoin. Community custody without single points of failure.', status:'active', link:'https://fedimint.org'},
+  {n:'E06', name:'Ark Protocol', tag:'Lightning · Layer 2', desc:'UTXO-sharing off-chain protocol for trustless Layer 2 Bitcoin payments.', status:'active', link:'https://arkdev.info'},
+  {n:'E07', name:'Silent Payments (BIP-352)', tag:'Bitcoin Privacy', desc:'Reusable payment addresses without on-chain address reuse. Privacy by default.', status:'active', link:'https://silentpayments.xyz'},
+];
+
+const bips = [
+  {num:'BIP-340', title:'Schnorr Signatures', desc:'Schnorr signature scheme for secp256k1. Enables key aggregation and Taproot.', status:'Final', u:'https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki'},
+  {num:'BIP-341', title:'Taproot', desc:'Merges P2SH and P2WPKH. Introduces MAST for complex scripts. Privacy-enhancing.', status:'Final', u:'https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki'},
+  {num:'BIP-342', title:'Tapscript', desc:'Script upgrades for Taproot — new opcodes including OP_CHECKSIGADD.', status:'Final', u:'https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki'},
+  {num:'BIP-352', title:'Silent Payments', desc:'Reusable payment addresses. Pay-to-silent-payment for privacy by default.', status:'Draft', u:'https://github.com/bitcoin/bips/blob/master/bip-0352.mediawiki'},
+  {num:'BIP-327', title:'MuSig2', desc:'Two-round Schnorr multi-signatures. n-of-n aggregation. Threshold signature improvements.', status:'Draft', u:'https://github.com/bitcoin/bips/blob/master/bip-0327.mediawiki'},
+  {num:'BIP-119', title:'OP_CHECKTEMPLATEVERIFY', desc:'Covenants via hash commitments. Enables vaults, congestion control, and DLCs.', status:'Draft', u:'https://github.com/bitcoin/bips/blob/master/bip-0119.mediawiki'},
+  {num:'BIP-370', title:'PSBT v2', desc:'Partially Signed Bitcoin Transactions v2. Improved multi-party transaction construction.', status:'Draft', u:'https://github.com/bitcoin/bips/blob/master/bip-0370.mediawiki'},
+  {num:'BIP-329', title:'Wallet Labels Export', desc:'Standard format for exporting Bitcoin address and transaction labels between wallets.', status:'Final', u:'https://github.com/bitcoin/bips/blob/master/bip-0329.mediawiki'},
+];
+
+const statusMap = {live:'status-live', active:'status-active', soon:'status-soon', planned:'status-planned'};
+const statusLabel = {live:'● LIVE', active:'● ACTIVE DEV', soon:'COMING SOON', planned:'PLANNED'};
+
+function renderRows(data, containerId){
+  const el = document.getElementById(containerId);
+  el.innerHTML = data.map(p=>`
+    <div class="proj-row">
+      <span class="proj-number">${p.n}</span>
+      <div>
+        <div class="proj-name">${p.name}</div>
+        <div class="proj-tag">${p.tag}</div>
+      </div>
+      <div class="proj-desc">${p.desc}</div>
+      <div class="proj-meta">
+        <span class="status ${statusMap[p.status]}">${statusLabel[p.status]}</span>
+        ${p.link ? `<a class="proj-link" href="${p.link}" target="${p.link.startsWith('http')?'_blank':'_self'}" rel="noopener">View →</a>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+renderRows(projects, 'project-rows');
+renderRows(ecoProjects, 'eco-rows');
+
+const bipStatus = {Final:'status-live', Draft:'status-active', Active:'status-live'};
+document.getElementById('bip-tbody').innerHTML = bips.map(b=>`
+  <tr>
+    <td class="bip-num">${b.num}</td>
+    <td><div class="bip-title">${b.title}</div></td>
+    <td class="bip-desc">${b.desc}</td>
+    <td><span class="status ${bipStatus[b.status]||'status-planned'}">${b.status}</span></td>
+    <td><a class="bip-link" href="${b.u}" target="_blank" rel="noopener">BIPs.io →</a></td>
+  </tr>
+`).join('');
+</script>
+</body>
+</html>

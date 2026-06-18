@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE BIT LIFE — Bitcoin. Code. Sovereignty.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,600;0,700;1,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/shared.css">
+<style>
+/* ---- HERO ---- */
+.hero{
+  position:relative;min-height:calc(100vh - 68px);display:grid;
+  grid-template-columns:1fr 1fr;gap:0;overflow:hidden;
+  border-bottom:1px solid var(--line);
+}
+.hero-left{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:80px 60px 80px 0;z-index:2;
+}
+.hero-title{
+  font-family:'Chakra Petch',sans-serif;font-weight:700;
+  font-size:clamp(48px,7.5vw,112px);line-height:.9;letter-spacing:-.015em;
+  background:linear-gradient(178deg,#fff 0%,#bff6ff 28%,var(--cyan) 60%,var(--cyan-deep) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 10px 40px rgba(0,229,255,.2));
+  position:relative;
+}
+[data-theme="light"] .hero-title{
+  background:linear-gradient(178deg,#001830 0%,#003366 30%,var(--cyan) 70%,var(--cyan-deep) 100%);
+  -webkit-background-clip:text;background-clip:text;
+}
+.hero-title .sweep{
+  position:absolute;inset:0;-webkit-background-clip:text;background-clip:text;color:transparent;
+  background:linear-gradient(110deg,transparent 38%,rgba(255,255,255,.9) 50%,transparent 62%);
+  background-size:280% 100%;animation:sweep 6s ease-in-out infinite;
+}
+@keyframes sweep{0%,55%{background-position:130% 0}100%{background-position:-30% 0}}
+.hero-sub{max-width:480px;margin:24px 0 32px;color:var(--muted);font-size:16px;line-height:1.65}
+.hero-sub b{color:var(--ice)}
+[data-theme="light"] .hero-sub b{color:var(--text)}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+
+.hero-right{
+  position:relative;display:flex;flex-direction:column;
+  border-left:1px solid var(--line-soft);overflow:hidden;
+}
+.vert-ticker-wrap{
+  flex:1;overflow:hidden;position:relative;
+  mask:linear-gradient(180deg,transparent,#000 8%,#000 88%,transparent);
+  -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 88%,transparent);
+}
+.vert-ticker{
+  display:flex;flex-direction:column;gap:0;will-change:transform;
+}
+.vt-item{
+  padding:14px 32px;border-bottom:1px solid var(--line-soft);
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.08em;
+  color:var(--muted);line-height:1.5;
+}
+.vt-item b{color:var(--cyan);display:block;font-size:13.5px;margin-bottom:3px}
+[data-theme="light"] .vt-item b{color:var(--cyan-deep)}
+
+/* Hero right bottom: welcome l337 */
+.hero-welcome-block{
+  padding:28px 32px;border-top:1px solid var(--line);background:rgba(0,229,255,.03);
+}
+[data-theme="light"] .hero-welcome-block{background:rgba(0,119,182,.04);border-color:var(--line)}
+.welcome-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.28em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+.welcome-text{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(18px,2.6vw,30px);letter-spacing:.04em;color:var(--ice)}
+[data-theme="light"] .welcome-text{color:var(--text)}
+.l337-text{
+  font-family:'JetBrains Mono',monospace;font-size:clamp(13px,1.5vw,18px);letter-spacing:.1em;
+  color:var(--cyan);margin-top:5px;min-height:24px;transition:opacity .2s;
+}
+[data-theme="light"] .l337-text{color:var(--surf-orange)}
+
+@media(max-width:860px){
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero-right{display:none}
+  .hero-left{padding:60px 0}
+}
+
+/* ---- THREE-COLUMN LAYOUT ---- */
+.page-body{padding-top:16px}
+.three-col{
+  display:grid;grid-template-columns:260px 1fr 260px;
+  gap:0;min-height:80vh;max-width:1280px;margin:0 auto;padding:0 24px;
+}
+@media(max-width:1100px){.three-col{grid-template-columns:220px 1fr 220px}}
+@media(max-width:840px){.three-col{grid-template-columns:1fr}}
+
+.sidebar-left,.sidebar-right{
+  position:sticky;top:72px;align-self:start;
+  height:calc(100vh - 80px);overflow-y:auto;
+  padding:20px 16px 20px 0;
+  scrollbar-width:thin;scrollbar-color:var(--line) transparent;
+}
+.sidebar-right{padding:20px 0 20px 16px}
+.sidebar-left::-webkit-scrollbar,.sidebar-right::-webkit-scrollbar{width:3px}
+.sidebar-left::-webkit-scrollbar-thumb,.sidebar-right::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+
+@media(max-width:840px){
+  .sidebar-left,.sidebar-right{position:static;height:auto;padding:16px 0}
+  .sidebar-right{display:none}
+}
+
+.center-col{padding:24px 20px;border-left:1px solid var(--line-soft);border-right:1px solid var(--line-soft)}
+@media(max-width:840px){.center-col{border:none;padding:16px 0}}
+
+/* ---- SHOUTBOX WIDGET ---- */
+.shout-feed{
+  height:160px;overflow-y:auto;margin-bottom:10px;
+  scrollbar-width:thin;scrollbar-color:var(--line) transparent;
+}
+.shout-msg{
+  font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.55;
+  padding:5px 0;border-bottom:1px solid var(--line-soft);color:var(--muted);
+}
+.shout-msg .shout-name{color:var(--cyan);font-weight:700}
+[data-theme="light"] .shout-msg .shout-name{color:var(--cyan)}
+.shout-msg .shout-status{font-size:9.5px;color:rgba(0,229,255,.5);margin-top:2px}
+.shout-input-row{display:flex;gap:8px;margin-top:6px}
+.shout-input-row input{
+  flex:1;background:rgba(0,229,255,.04);border:1px solid var(--line);
+  border-radius:7px;padding:8px 10px;color:var(--text);
+  font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;
+  transition:border-color .2s;
+}
+[data-theme="light"] .shout-input-row input{background:rgba(0,119,182,.04);color:var(--text)}
+.shout-input-row input:focus{border-color:var(--cyan)}
+.shout-input-row input::placeholder{color:var(--muted);opacity:.6}
+.shout-input-row button{
+  background:var(--btn-primary-bg);color:var(--btn-primary-color);
+  border:none;border-radius:7px;padding:8px 12px;
+  font-family:'JetBrains Mono',monospace;font-size:13px;cursor:pointer;
+  transition:transform .15s;
+}
+.shout-input-row button:hover{transform:scale(1.08)}
+.shout-note{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);margin-top:7px;letter-spacing:.04em}
+.shout-note a{color:var(--cyan)}
+
+/* ---- LIGHTNING WIDGET ---- */
+.bolt12-pending{
+  display:flex;align-items:center;gap:8px;
+  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:17px;
+  color:var(--ice);margin-bottom:14px;
+}
+.bolt12-pending .lightning-icon{font-size:20px;animation:boltglow 2.6s infinite}
+.pending-tag{
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;
+  padding:2px 7px;border-radius:4px;background:rgba(255,212,0,.12);
+  border:1px solid rgba(255,212,0,.3);color:#ffd400;text-transform:uppercase;
+}
+.ln-impl-display{
+  min-height:52px;display:flex;flex-direction:column;justify-content:center;
+  margin-bottom:14px;padding:10px 12px;
+  border:1px solid var(--line);border-radius:10px;
+  background:rgba(0,0,0,.2);position:relative;overflow:hidden;
+}
+[data-theme="light"] .ln-impl-display{background:rgba(0,40,80,.04)}
+.ln-impl-name{
+  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:22px;
+  letter-spacing:.04em;transition:opacity .25s;
+}
+.ln-impl-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.12em;margin-top:3px}
+.ln-links{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ln-link{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
+  padding:6px 10px;border-radius:7px;text-align:center;cursor:pointer;
+  border:1px solid var(--line);color:var(--muted);background:rgba(255,255,255,.02);
+  transition:all .18s;text-decoration:none;display:block;
+}
+.ln-link:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.06)}
+.vanilla-link{
+  grid-column:span 2;
+  background:rgba(0,229,255,.05);border-color:rgba(0,229,255,.2);color:var(--cyan);
+  font-weight:700;letter-spacing:.14em;
+}
+.vanilla-link:hover{background:rgba(0,229,255,.12) !important;box-shadow:0 0 16px var(--cyan-glow)}
+[data-theme="light"] .vanilla-link{background:rgba(0,119,182,.06);color:var(--cyan-deep)}
+
+/* ---- EVENTS SECTION ---- */
+.events-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:40px}
+@media(max-width:700px){.events-grid{grid-template-columns:1fr}}
+.ev-card{
+  border-radius:14px;padding:18px;
+  background:var(--card-bg);
+  border:1px solid var(--line-soft);
+  box-shadow:0 8px 28px rgba(0,0,0,.35);
+  position:relative;overflow:hidden;
+  transition:transform .2s,border-color .2s;
+}
+.ev-card:hover{transform:translateY(-3px);border-color:var(--line)}
+.ev-card::before{content:"";position:absolute;inset:0;background:var(--gloss);pointer-events:none}
+.ev-card .ev-tag{
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;
+  color:var(--cyan);text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+[data-theme="light"] .ev-card .ev-tag{color:var(--surf-orange)}
+.ev-card .ev-tag .ev-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);animation:pulse 1.8s infinite}
+[data-theme="light"] .ev-card .ev-tag .ev-dot{background:var(--surf-orange)}
+.ev-card h4{font-family:'Chakra Petch',sans-serif;font-size:15px;line-height:1.3;margin-bottom:8px}
+.ev-card p{font-size:12.5px;color:var(--muted);line-height:1.55}
+.ev-card .ev-date{
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);
+  margin-top:12px;letter-spacing:.1em;
+}
+.ev-card a.ev-link{
+  display:inline-flex;align-items:center;gap:5px;margin-top:8px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;
+  color:var(--cyan);text-decoration:none;
+}
+.ev-card a.ev-link:hover{text-decoration:underline}
+
+/* ---- TIMELINE ---- */
+.timeline{position:relative;padding-left:30px}
+.timeline::before{content:"";position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--cyan),transparent);opacity:.4}
+.tl-item{position:relative;margin-bottom:30px;padding-bottom:30px;border-bottom:1px solid var(--line-soft)}
+.tl-item:last-child{border-bottom:none}
+.tl-item::before{
+  content:"";position:absolute;left:-26px;top:4px;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--void);border:2px solid var(--cyan);
+  box-shadow:0 0 8px var(--cyan-glow);
+}
+[data-theme="light"] .tl-item::before{background:var(--panel);border-color:var(--cyan)}
+.tl-date{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+.tl-title{font-family:'Chakra Petch',sans-serif;font-size:18px;color:var(--ice);margin-bottom:6px}
+[data-theme="light"] .tl-title{color:var(--text)}
+.tl-body{font-size:13.5px;color:var(--muted);line-height:1.6;max-width:600px}
+.tl-tag{
+  display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;
+  padding:2px 7px;border-radius:4px;background:rgba(0,229,255,.08);border:1px solid var(--line);
+  color:var(--cyan);text-transform:uppercase;margin-top:8px;margin-right:5px;
+}
+[data-theme="light"] .tl-tag{background:rgba(0,119,182,.07);color:var(--cyan-deep)}
+
+/* ---- RIGHT SIDEBAR EXTRAS ---- */
+.nostr-widget{border-color:rgba(148,93,255,.2)}
+.nostr-widget .coming-soon-badge{background:rgba(148,93,255,.1);border-color:rgba(148,93,255,.25);color:#9459FF}
+.nostr-ai-widget{border-color:rgba(0,230,118,.15)}
+.nostr-ai-widget .widget-title{color:var(--ice)}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line-soft);font-size:12.5px}
+.stat-row:last-child{border-bottom:none}
+.stat-label{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase}
+.stat-val{font-family:'Chakra Petch',sans-serif;font-size:14px;color:var(--ice)}
+.stat-val.cyan{color:var(--cyan)}
+[data-theme="light"] .stat-val{color:var(--text)}
+[data-theme="light"] .stat-val.cyan{color:var(--cyan)}
+
+/* ---- MATRIX OVERLAY ---- */
+#matrix-overlay{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:#000;overflow:hidden;
+}
+#matrix-canvas{position:absolute;inset:0;width:100%;height:100%}
+#terminal-box{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:min(480px,90vw);background:rgba(0,8,2,.92);
+  border:1px solid #00ff41;border-radius:6px;padding:28px 32px;
+  font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.75;
+  color:#00ff41;box-shadow:0 0 40px rgba(0,255,65,.3),inset 0 0 20px rgba(0,255,65,.05);
+  display:none;
+}
+#terminal-text{min-height:100px;white-space:pre-wrap}
+#terminal-continue{
+  display:none;margin-top:20px;
+  font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.14em;
+  background:transparent;border:1px solid #00ff41;color:#00ff41;
+  padding:10px 24px;border-radius:4px;cursor:pointer;
+  transition:background .2s,color .2s;
+}
+#terminal-continue:hover{background:#00ff41;color:#000}
+</style>
+</head>
+<body>
+
+<!-- MATRIX OVERLAY -->
+<div id="matrix-overlay">
+  <canvas id="matrix-canvas"></canvas>
+  <div id="terminal-box">
+    <div id="terminal-text"></div>
+    <button id="terminal-continue">[ CONTINUE ]</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <span class="spark"></span>
+      <b>THE&nbsp;<span>BIT</span>&nbsp;LIFE</b>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-pill">Home</a>
+      <a href="shop.html" class="nav-pill">Shop</a>
+      <a href="bookstore.html" class="nav-pill">Bookstore</a>
+      <a href="media.html" class="nav-pill">Media</a>
+      <a href="projects.html" class="nav-pill">Projects</a>
+      <a href="signal.html" class="nav-pill">The Signal</a>
+      <a href="mempool.html" class="nav-pill">Mempool</a>
+    </div>
+    <div class="nav-right">
+      <a href="shop.html" class="nav-cta">Shop the Drop</a>
+      <div class="theme-toggle">
+        <span class="icon icon-moon" title="dark">🌙</span>
+        <div class="toggle-track" id="toggle-track"><div class="toggle-thumb"></div></div>
+        <span class="icon icon-sun" title="light" style="opacity:.35">☀️</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- SITE WALL -->
+<div class="sitewall" id="sitewall"></div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-left wrap" style="max-width:none;padding-left:max(28px,calc((100vw - 1280px)/2 + 28px))">
+    <div class="eyebrow">Bitcoin · Code · Sovereignty · 21M only</div>
+    <h1 class="hero-title">
+      THE<br>BIT LIFE<span class="sweep">THE<br>BIT LIFE</span>
+    </h1>
+    <p class="hero-sub">Sovereign hardware. Open source. <b>Not your keys, not your coins.</b> A portal for the cypherpunks, plebs, and node-runners building the future on an immutable foundation.</p>
+    <div class="hero-btns">
+      <a href="shop.html" class="btn btn-primary">Shop the Drop →</a>
+      <a href="projects.html" class="btn btn-ghost">View Projects</a>
+    </div>
+    <div class="ticker">
+      <div class="ticker-track">
+        <span>PAY IN <b>BTC / LIGHTNING</b></span><span>21M <b>HARD CAP</b></span>
+        <span>NOT YOUR KEYS · <b>NOT YOUR COINS</b></span><span>BITAXE <b>IN STOCK</b></span>
+        <span>OPEN SOURCE <b>OR IT DIDN'T HAPPEN</b></span><span>NOSTR <b>COMING SOON</b></span>
+        <span>PAY IN <b>BTC / LIGHTNING</b></span><span>21M <b>HARD CAP</b></span>
+        <span>NOT YOUR KEYS · <b>NOT YOUR COINS</b></span><span>BITAXE <b>IN STOCK</b></span>
+        <span>OPEN SOURCE <b>OR IT DIDN'T HAPPEN</b></span><span>NOSTR <b>COMING SOON</b></span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="vert-ticker-wrap" id="vert-ticker-wrap">
+      <div class="vert-ticker" id="vert-ticker"></div>
+    </div>
+    <div class="hero-welcome-block">
+      <div class="welcome-label">// Welcome message</div>
+      <div class="welcome-text">WELCOME TO THE BIT LIFE</div>
+      <div class="l337-text" id="l337-hero">W3LC0M3 T0 7H3 B17 L1F3</div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN 3-COL -->
+<div class="page-body">
+<main class="three-col">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar-left">
+
+    <!-- SHOUTBOX -->
+    <div class="widget shoutbox-widget reveal">
+      <div class="widget-header">
+        <span class="widget-label">BTCPayServer</span>
+        <span class="coming-soon-badge">COMING SOON</span>
+      </div>
+      <h3 class="widget-title">Shoutbox</h3>
+      <div class="shout-feed" id="shout-feed"></div>
+      <div class="shout-input-row">
+        <input type="text" id="shout-input" placeholder="say something..." maxlength="140" autocomplete="off">
+        <button id="shout-send" title="send">↵</button>
+      </div>
+      <div class="shout-note">✓ not censored · reviewed later · <a href="https://github.com/fourthSol/thebitlife" target="_blank" rel="noopener">make a PR →</a></div>
+      <div class="shout-note" style="margin-top:4px;color:rgba(0,229,255,.5)">⚡ free for 1 week until shoutbox goes live</div>
+    </div>
+
+    <!-- LIGHTNING WIDGET -->
+    <div class="widget lightning-widget reveal">
+      <div class="widget-header">
+        <span class="widget-label">Lightning Network</span>
+      </div>
+      <div class="bolt12-pending">
+        <span class="lightning-icon">⚡</span>
+        BOLT12 <span class="pending-tag">PENDING</span>
+      </div>
+      <div class="ln-impl-display" id="ln-impl">
+        <div class="ln-impl-name" id="ln-name" style="color:#00E5FF">LND</div>
+        <div class="ln-impl-sub" id="ln-sub">Lightning Labs · Go implementation</div>
+      </div>
+      <div class="ln-links">
+        <a href="https://lightning.engineering" target="_blank" rel="noopener" class="ln-link" id="lnk-lnd">LND ↗</a>
+        <a href="https://spiral.xyz" target="_blank" rel="noopener" class="ln-link" id="lnk-ldk">LDK ↗</a>
+        <a href="https://acinq.co" target="_blank" rel="noopener" class="ln-link" id="lnk-eclair">Eclair ↗</a>
+        <a href="#" class="ln-link vanilla-link" id="vanilla-btn">⚡ Vanilla Self-Host</a>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- CENTER -->
+  <div class="center-col">
+
+    <section class="reveal">
+      <div class="shead">
+        <div>
+          <div class="lbl">// Current events</div>
+          <h2>What's happening.</h2>
+        </div>
+      </div>
+      <div class="events-grid" id="events-grid"></div>
+    </section>
+
+    <section class="reveal">
+      <div class="shead">
+        <div>
+          <div class="lbl">// Timeline</div>
+          <h2>The chain of events.</h2>
+        </div>
+      </div>
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="sidebar-right">
+
+    <div class="widget nostr-widget reveal">
+      <div class="widget-header">
+        <span class="coming-soon-badge" style="background:rgba(148,93,255,.1);border-color:rgba(148,93,255,.3);color:#9459FF">COMING SOON</span>
+      </div>
+      <h3 class="widget-title">Nostr Integration</h3>
+      <p class="widget-desc">Decentralized social layer for The Bit Life. Post, relay, follow — without intermediaries. Censorship resistant by design.</p>
+      <div class="dev-status" style="margin-top:10px">
+        <span class="dev-dot"></span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)">In Development</span>
+      </div>
+      <a href="https://nostr.com" target="_blank" rel="noopener" style="display:block;margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(148,93,255,.8);letter-spacing:.08em">nostr.com →</a>
+    </div>
+
+    <div class="widget nostr-ai-widget reveal">
+      <div class="widget-header">
+        <span class="in-dev-badge">IN DEVELOPMENT</span>
+      </div>
+      <h3 class="widget-title" style="color:var(--ice)">Nostr AI Inference Pool</h3>
+      <p class="widget-desc">Distributed AI inference over Nostr. Pay-per-prompt via Lightning. Sovereign compute — no API keys, no corporate middleware.</p>
+      <div class="dev-status" style="margin-top:10px">
+        <span class="dev-dot active"></span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#00e676">Active Dev</span>
+      </div>
+    </div>
+
+    <div class="widget reveal" style="border-color:rgba(0,180,100,.15)">
+      <div class="widget-header">
+        <span class="coming-soon-badge" style="background:rgba(0,180,100,.08);border-color:rgba(0,180,100,.22);color:#00b464">COMING SOON</span>
+      </div>
+      <h3 class="widget-title">BuddyPress Community</h3>
+      <p class="widget-desc">Sovereign forums, profiles, groups. The pleb social network. Self-hosted, no censorship, no surveillance.</p>
+    </div>
+
+    <div class="widget stats-widget reveal">
+      <div class="widget-header">
+        <span class="widget-label">// Network stats</span>
+      </div>
+      <div class="stat-row"><span class="stat-label">Block Height</span><span class="stat-val cyan" id="stat-block">Loading…</span></div>
+      <div class="stat-row"><span class="stat-label">Supply Cap</span><span class="stat-val">21,000,000</span></div>
+      <div class="stat-row"><span class="stat-label">Network</span><span class="stat-val">Bitcoin</span></div>
+      <div class="stat-row"><span class="stat-label">Node Status</span><span class="stat-val cyan">OPERATIONAL</span></div>
+    </div>
+
+    <div class="widget reveal" style="border-color:rgba(0,229,255,.2)">
+      <div class="widget-header"><span class="widget-label">// Open Source</span></div>
+      <h3 class="widget-title" style="font-size:14px">This site is open source</h3>
+      <p class="widget-desc">All code lives on GitHub. PRs welcome — any direction. Improvements, new features, fixes.</p>
+      <a href="https://github.com/fourthSol/thebitlife" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--cyan);letter-spacing:.08em">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        github.com/fourthSol/thebitlife →
+      </a>
+      <a href="https://git.iris.to/#/npub1e0atv85zpjtuk5h890y5vjyqvnjjv4p0xgfncch398k45d9c75gqtutnha/thebit.life" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#9459FF;letter-spacing:.08em">
+        ⚡ Also on Nostr via Iris.to →
+      </a>
+    </div>
+
+  </aside>
+
+</main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand"><span class="spark"></span><b>THE&nbsp;<span>BIT</span>&nbsp;LIFE</b></a>
+        <p>Sovereign hardware, open source code, and a portal for the 21 million. Not your keys, not your coins.</p>
+        <div class="foot-oss">
+          <strong style="color:var(--cyan)">Open Source ·</strong> PRs always welcome.<br>
+          <a href="https://github.com/fourthSol/thebitlife" target="_blank" rel="noopener">github.com/fourthSol/thebitlife</a><br>
+          <a href="https://git.iris.to/#/npub1e0atv85zpjtuk5h890y5vjyqvnjjv4p0xgfncch398k45d9c75gqtutnha/thebit.life" target="_blank" rel="noopener">Also mirrored on Nostr via Iris.to →</a><br>
+          <span style="opacity:.6;font-size:9.5px">Note: Iris may lag behind GitHub. GitHub is canonical. Any direction of contribution is welcome.</span>
+        </div>
+      </div>
+      <div class="foot-cols">
+        <div class="fcol">
+          <h5>Pages</h5>
+          <a href="shop.html">Shop</a>
+          <a href="bookstore.html">Bookstore</a>
+          <a href="media.html">Media</a>
+          <a href="projects.html">Projects</a>
+          <a href="signal.html">The Signal</a>
+        </div>
+        <div class="fcol">
+          <h5>Coming Soon</h5>
+          <a href="#">Nostr Integration</a>
+          <a href="#">BuddyPress Community</a>
+          <a href="#">Nostr AI Inference Pool</a>
+          <a href="#">BTCPayServer Shoutbox</a>
+        </div>
+        <div class="fcol">
+          <h5>Ecosystem</h5>
+          <a href="https://lightning.engineering" target="_blank" rel="noopener">Lightning Labs ↗</a>
+          <a href="https://spiral.xyz" target="_blank" rel="noopener">Spiral BTC ↗</a>
+          <a href="https://acinq.co" target="_blank" rel="noopener">ACINQ ↗</a>
+          <a href="https://blockstream.com" target="_blank" rel="noopener">Blockstream ↗</a>
+          <a href="https://iris.to" target="_blank" rel="noopener">Iris.to (Nostr) ↗</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>© 2026 THE BIT LIFE · NOT YOUR KEYS, NOT YOUR COINS</span>
+      <span>BUILT ON 21,000,000</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/shared.js"></script>
+<script>
+/* ---- L337 CYCLER ---- */
+(function(){
+  const el = document.getElementById('l337-hero');
+  const lines = [
+    'W3LC0M3 T0 7H3 B17 L1F3',
+    'W3|_C0|\/|3 70 7H3 B!7 |_!F3',
+    'w3lc0m3 2 d4 b1t lyf3',
+    'welkum 2 teh BIT LYF3',
+    'W31C0M3 70 D4 8!T L!F3',
+    '><><>< THE BIT LIFE ><><><',
+    'D4 B17 L1F3 1Z R34L',
+    'W3LC0M3 T0 7H3 R4BB17 H0L3',
+  ];
+  let i = 0;
+  setInterval(()=>{
+    i = (i+1) % lines.length;
+    el.style.opacity = '0';
+    setTimeout(()=>{ el.textContent = lines[i]; el.style.transition='opacity .3s'; el.style.opacity='1'; }, 200);
+  }, 2400);
+})();
+
+/* ---- VERTICAL TICKER ---- */
+(function(){
+  const items = [
+    {b:'Block 900,000+', t:'The timechain keeps ticking. Every 10 minutes.'},
+    {b:'BOLT12 Offers', t:'Reusable Lightning payment codes. Privacy-first.'},
+    {b:'21M BTC', t:'Fixed supply. No exceptions. Not even for governments.'},
+    {b:'Taproot Active', t:'Schnorr sigs, MAST, and script privacy baked in.'},
+    {b:'Nostr Protocol', t:'Censorship-resistant social networking on relays.'},
+    {b:'Core Lightning', t:'Blockstream\'s C implementation. Refactored. Lean.'},
+    {b:'LDK by Spiral', t:'Embed Lightning into any app. Rust library.'},
+    {b:'Phoenix Wallet', t:'Self-custodial. Splice-based channels. ACINQ.'},
+    {b:'BitAxe Gamma', t:'500 GH/s. Solo mine. Open firmware. Desk art.'},
+    {b:'Coldcard Q', t:'Full keyboard, QR + SD air-gap. The gold standard.'},
+    {b:'SeedSigner DIY', t:'Stateless. Camera signing. Build it for $95.'},
+    {b:'Sparrow Wallet', t:'PSBT. CoinJoin. Full node. Desktop sovereignty.'},
+    {b:'mempool.space', t:'Visualize the mempool. Know your fees. Always.'},
+    {b:'OP_RETURN', t:'Arbitrary data in the chain. Forever.'},
+    {b:'Eclair · ACINQ', t:'Scala LN impl. Powers Phoenix mobile wallet.'},
+    {b:'Stacker News', t:'HN for Bitcoin. Lightning-native comments.'},
+    {b:'BIP-340/341/342', t:'Taproot upgrade. Soft fork activated Nov 2021.'},
+  ];
+  const el = document.getElementById('vert-ticker');
+  const html = items.map(i=>`<div class="vt-item"><b>${i.b}</b>${i.t}</div>`).join('');
+  el.innerHTML = html + html; // duplicate for seamless loop
+
+  let pos = 0;
+  const itemH = 68; // approx height per item
+  const totalH = items.length * itemH;
+
+  function tick(){
+    pos += 0.4;
+    if(pos >= totalH) pos -= totalH;
+    el.style.transform = `translateY(-${pos}px)`;
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+/* ---- SHOUTBOX ---- */
+(function(){
+  const feed = document.getElementById('shout-feed');
+  const input = document.getElementById('shout-input');
+  const btn = document.getElementById('shout-send');
+
+  const seed = [
+    {name:'satoshi_ghost', msg:'the genesis block is still there. immutable.', ts:'just now'},
+    {name:'pleb_node_69', msg:'running core on a raspi4 since 2020. never going back.', ts:'2m ago'},
+    {name:'coldcard_maxi', msg:'airgapped since 2019. 0 ragrets.', ts:'5m ago'},
+    {name:'ln_router_01', msg:'eclair channels filled. routing 100k sats/day', ts:'8m ago'},
+  ];
+
+  function addMsg(name, msg, ts){
+    const d = document.createElement('div');
+    d.className = 'shout-msg';
+    d.innerHTML = `<span class="shout-name">${name}:</span> ${msg} <div class="shout-status">✓ not censored · reviewed later · ${ts}</div>`;
+    feed.prepend(d);
+    feed.scrollTop = 0;
+  }
+
+  seed.forEach(s => addMsg(s.name, s.msg, s.ts));
+
+  function send(){
+    const val = input.value.trim();
+    if(!val) return;
+    addMsg('anon_'+(Math.random()*9000+1000|0), val, 'just now');
+    input.value = '';
+  }
+
+  btn.addEventListener('click', send);
+  input.addEventListener('keydown', e=>{ if(e.key === 'Enter') send(); });
+})();
+
+/* ---- LIGHTNING IMPLEMENTATION CYCLER ---- */
+(function(){
+  const impls = [
+    {name:'LND', color:'#00E5FF', sub:'Lightning Labs · Go implementation', blockstream:false},
+    {name:'LDK', color:'#FF6B35', sub:'Spiral BTC · Rust library — embed anywhere', blockstream:false},
+    {name:'Eclair', color:'#A78BFA', sub:'ACINQ · Scala implementation · powers Phoenix', blockstream:false},
+    {name:'c-lightning', color:'#6EE7B7', sub:'The original C implementation...', blockstream:false, refactor:true},
+  ];
+  const nameEl = document.getElementById('ln-name');
+  const subEl = document.getElementById('ln-sub');
+  let idx = 0;
+
+  function showImpl(i){
+    const impl = impls[i % impls.length];
+    nameEl.style.opacity = '0';
+    subEl.style.opacity = '0';
+    setTimeout(()=>{
+      if(impl.refactor){
+        nameEl.textContent = 'c-lightning';
+        nameEl.style.color = impl.color;
+        subEl.textContent = impl.sub;
+        nameEl.style.opacity = '1'; subEl.style.opacity = '1';
+        setTimeout(()=>{
+          nameEl.style.opacity = '0';
+          setTimeout(()=>{
+            nameEl.textContent = 'REFACTOR';
+            nameEl.style.color = '#FFD400';
+            nameEl.style.opacity = '1';
+            setTimeout(()=>{
+              nameEl.style.opacity = '0';
+              setTimeout(()=>{
+                nameEl.textContent = 'CORE LIGHTNING';
+                nameEl.style.color = '#00E5FF';
+                nameEl.style.fontStyle = 'normal';
+                nameEl.style.letterSpacing = '.05em';
+                subEl.textContent = 'Blockstream · C refactor · production-grade';
+                nameEl.style.opacity = '1'; subEl.style.opacity = '1';
+              }, 180);
+            }, 700);
+          }, 180);
+        }, 900);
+      } else {
+        nameEl.textContent = impl.name;
+        nameEl.style.color = impl.color;
+        nameEl.style.fontStyle = 'normal';
+        nameEl.style.letterSpacing = '.04em';
+        subEl.textContent = impl.sub;
+        nameEl.style.opacity = '1'; subEl.style.opacity = '1';
+      }
+    }, 200);
+  }
+
+  showImpl(0);
+  setInterval(()=>{ idx++; showImpl(idx); }, 3200);
+})();
+
+/* ---- VANILLA SELF-HOST / MATRIX ---- */
+(function(){
+  document.getElementById('vanilla-btn').addEventListener('click', launchMatrix);
+  document.getElementById('terminal-continue').addEventListener('click', ()=>{ window.close(); });
+
+  function launchMatrix(){
+    const overlay = document.getElementById('matrix-overlay');
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    const termBox = document.getElementById('terminal-box');
+    overlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789<>={}[]|/\\$#@!%^&*():;,._~`"\'+-';
+    const fontSize = 13;
+    const cols = Math.floor(canvas.width / fontSize);
+    const drops = Array(cols).fill(0).map(()=>Math.random()*canvas.height/fontSize|0);
+    let frame = 0;
+    let running = true;
+
+    function draw(){
+      if(!running) return;
+      ctx.fillStyle = 'rgba(0,0,0,0.045)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.font = `${fontSize}px 'JetBrains Mono',monospace`;
+      drops.forEach((y,x)=>{
+        const c = chars[Math.random()*chars.length|0];
+        ctx.fillStyle = frame < 60 ? `rgba(0,255,65,${0.4+Math.random()*.6})` : `rgba(0,200,50,${0.15+Math.random()*.35})`;
+        ctx.fillText(c, x*fontSize, y*fontSize);
+        if(y*fontSize > canvas.height && Math.random() > 0.975) drops[x] = 0;
+        drops[x]++;
+      });
+      frame++;
+      if(frame === 100){ running = false; showTerminal(); }
+      else requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  }
+
+  async function showTerminal(){
+    const termBox = document.getElementById('terminal-box');
+    const textEl = document.getElementById('terminal-text');
+    const contBtn = document.getElementById('terminal-continue');
+    termBox.style.display = 'block';
+
+    let zip = '—';
+    try {
+      const r = await fetch('https://ipapi.co/json/');
+      const d = await r.json();
+      zip = d.postal || d.city || '—';
+    } catch(e){ zip = 'unknown'; }
+
+    const lines = [
+      'hello, user...',
+      '',
+      `your location: ${zip}`,
+      '',
+      'open your terminal and sync your node.',
+      '',
+      'have a nice day.',
+    ];
+
+    let li = 0, ci = 0, text = '';
+    function typeChar(){
+      if(li >= lines.length){
+        contBtn.style.display = 'inline-block';
+        return;
+      }
+      const line = lines[li];
+      if(ci < line.length){
+        text += line[ci]; ci++;
+      } else {
+        text += '\n'; li++; ci = 0;
+      }
+      textEl.textContent = text;
+      setTimeout(typeChar, li < lines.length && lines[li-1] === '' ? 180 : 42);
+    }
+    setTimeout(typeChar, 300);
+  }
+})();
+
+/* ---- EVENTS ---- */
+(function(){
+  const events = [
+    {
+      tag:'Mainnet', color:'#00E5FF',
+      items:[
+        {h:'Bitcoin Block 900,000', b:'The timechain crossed block 900k. 21M supply clock ticking.', date:'Jun 2026', link:'https://mempool.space'},
+        {h:'Taproot Adoption Up', b:'Taproot-spending transactions hit a new monthly high as wallet support grows.', date:'May 2026'},
+        {h:'Mining Difficulty ATH', b:'Network hashrate reaches all-time high. Difficulty adjustment follows.', date:'Apr 2026'},
+      ]
+    },
+    {
+      tag:'Lightning', color:'#FFD400',
+      items:[
+        {h:'BOLT12 Spec Progress', b:'Offers protocol moves toward broader wallet and node implementation adoption.', date:'Jun 2026', link:'https://bolt12.org'},
+        {h:'LDK v0.0.124', b:'Spiral\'s Rust Lightning library ships async payment handling improvements.', date:'May 2026', link:'https://spiral.xyz'},
+        {h:'Eclair 0.11', b:'ACINQ drops new Eclair release with improved HTLC batching and fee management.', date:'Apr 2026', link:'https://acinq.co'},
+      ]
+    },
+    {
+      tag:'Nostr', color:'#9459FF',
+      items:[
+        {h:'NIP-90 DVM Activity', b:'Data Vending Machines on Nostr powering AI inference tasks over Lightning.', date:'Jun 2026', link:'https://nostr.com'},
+        {h:'Primal v1.9', b:'Primal ships caching relay improvements and onboarding UX enhancements.', date:'May 2026', link:'https://primal.net'},
+        {h:'Iris.to Git Mirror', b:'Iris.to adds Git repository mirroring for sovereign code hosting on Nostr.', date:'Apr 2026', link:'https://iris.to'},
+      ]
+    },
+  ];
+
+  const grid = document.getElementById('events-grid');
+  grid.innerHTML = events.map(col => `
+    <div>
+      ${col.items.map(ev=>`
+      <div class="ev-card" style="margin-bottom:12px">
+        <div class="ev-tag" style="color:${col.color}"><span class="ev-dot" style="background:${col.color}"></span>${col.tag}</div>
+        <h4>${ev.h}</h4>
+        <p>${ev.b}</p>
+        <div class="ev-date">${ev.date}</div>
+        ${ev.link ? `<a class="ev-link" href="${ev.link}" target="_blank" rel="noopener" style="color:${col.color}">View →</a>` : ''}
+      </div>`).join('')}
+    </div>
+  `).join('');
+})();
+
+/* ---- TIMELINE ---- */
+(function(){
+  const tl = [
+    {date:'Jun 2026', title:'THE BIT LIFE LAUNCHES', body:'A new portal for Bitcoiners, plebs, and node-runners. Open source from day one. Nostr integration coming soon.', tags:['launch','milestone']},
+    {date:'Jun 2026', title:'BTCPayServer Shoutbox: Week 1 Free', body:'Unmoderated (post-review). Not censored. Make PRs if something needs fixing. Lightning payments go live next.', tags:['shoutbox','btcpay']},
+    {date:'Jun 2026', title:'Nostr AI Inference Pool — Active Dev', body:'Distributed AI inference over Nostr Data Vending Machines. Pay-per-prompt via Lightning. Self-hosted compute layer.', tags:['nostr','ai','lightning']},
+    {date:'May 2026', title:'BOLT12 Adoption Grows', body:'Offers protocol getting traction across Phoenix, Zeus, and CLN. Reusable codes without custodians.', tags:['lightning','bolt12']},
+    {date:'Apr 2026', title:'Core Lightning 24.x Ships', body:'Blockstream\'s refactored C implementation — leaner, faster. C-lightning era officially ends.', tags:['core-lightning','blockstream']},
+    {date:'Mar 2026', title:'LDK v0.0.124 Stable', body:'Spiral ships async payments to Rust library. LDK powering next-gen mobile Bitcoin apps.', tags:['ldk','spiral']},
+    {date:'Jan 2026', title:'Taproot Adoption Accelerates', body:'Schnorr signatures and script privacy finally mainstream. P2TR outputs growing month-over-month.', tags:['taproot','bitcoin']},
+    {date:'Nov 2025', title:'Bitcoin Block 900,000', body:'Milestone block. The timechain keeps ticking, approximately every 10 minutes, forever.', tags:['milestone','bitcoin']},
+  ];
+
+  const el = document.getElementById('timeline');
+  el.innerHTML = tl.map(item=>`
+    <div class="tl-item">
+      <div class="tl-date">${item.date}</div>
+      <div class="tl-title">${item.title}</div>
+      <div class="tl-body">${item.body}</div>
+      <div>${item.tags.map(t=>`<span class="tl-tag">${t}</span>`).join('')}</div>
+    </div>
+  `).join('');
+})();
+
+/* ---- BLOCK HEIGHT FETCH ---- */
+fetch('https://mempool.space/api/blocks/tip/height')
+  .then(r=>r.text())
+  .then(h=>{ const el = document.getElementById('stat-block'); if(el) el.textContent = Number(h).toLocaleString(); })
+  .catch(()=>{});
+</script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — THE BIT LIFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/shared.css">
+<style>
+.hero{padding:90px 0 60px;position:relative;overflow:hidden}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-weight:700;line-height:.92;font-size:clamp(54px,9vw,120px);position:relative;background:linear-gradient(178deg,#fff 0%,#bff6ff 28%,var(--cyan) 62%,var(--cyan-deep) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 10px 40px rgba(0,229,255,.2))}
+[data-theme="light"] .hero h1{background:linear-gradient(178deg,#001830 0%,var(--cyan) 70%,var(--cyan-deep) 100%);-webkit-background-clip:text;background-clip:text}
+.hero-sub{max-width:540px;margin:26px 0 34px;color:var(--muted);font-size:16.5px}
+.hero-sub b{color:var(--ice)}
+[data-theme="light"] .hero-sub b{color:var(--text)}
+.hero .sweep{position:absolute;inset:0;-webkit-background-clip:text;background-clip:text;color:transparent;background:linear-gradient(110deg,transparent 38%,rgba(255,255,255,.9) 50%,transparent 62%);background-size:280% 100%;animation:sweep 6s ease-in-out infinite}
+@keyframes sweep{0%,55%{background-position:130% 0}100%{background-position:-30% 0}}
+
+/* LOCKED TEE WALL */
+.teewall-sec{border-top:1px solid var(--line-soft)}
+.locked{display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.18em;color:var(--cyan);border:1px solid var(--line);border-radius:999px;padding:7px 15px;background:rgba(0,229,255,.05);text-transform:uppercase;margin-bottom:18px}
+.dot-pulse{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:pulse 1.8s infinite}
+.teewall{position:relative;column-count:5;column-gap:16px;margin-top:8px}
+@media(max-width:1000px){.teewall{column-count:3}}
+@media(max-width:600px){.teewall{column-count:2}}
+.tee{break-inside:avoid;margin-bottom:16px;border-radius:14px;overflow:hidden;position:relative;border:1px solid var(--line-soft);background:var(--panel);box-shadow:0 14px 36px rgba(0,0,0,.5)}
+.tee svg{display:block;width:100%;filter:blur(9px) saturate(125%);transform:scale(1.06)}
+.tee::after{content:"";position:absolute;inset:0;background:var(--gloss);mix-blend-mode:screen;pointer-events:none}
+.tee .tag{position:absolute;left:10px;bottom:10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--ice);background:rgba(5,7,9,.55);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:6px;padding:4px 8px;text-transform:uppercase}
+.tee .tag b{color:var(--cyan)}
+.wall-glass{position:absolute;inset:0;display:grid;place-items:center;z-index:3;pointer-events:none}
+.wall-glass .card{pointer-events:auto;text-align:center;padding:34px 42px;border-radius:18px;background:linear-gradient(180deg,rgba(10,14,17,.74),rgba(10,14,17,.52));border:1px solid var(--line);backdrop-filter:blur(4px);box-shadow:0 28px 72px rgba(0,0,0,.6),inset 0 1px 1px rgba(255,255,255,.07)}
+.wall-glass h3{font-family:'Chakra Petch',sans-serif;font-size:28px;letter-spacing:.02em}
+.wall-glass p{color:var(--muted);font-size:13.5px;margin:9px 0 20px}
+
+/* HW ROWS */
+.hw-row{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;padding:60px 0;border-top:1px solid var(--line-soft)}
+.hw-row.rev .hw-art{order:2}
+@media(max-width:840px){.hw-row{grid-template-columns:1fr;gap:28px}.hw-row.rev .hw-art{order:0}}
+.hw-copy .idx{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan-deep);letter-spacing:.2em}
+.hw-copy h3{font-family:'Chakra Petch',sans-serif;font-size:clamp(26px,3.4vw,44px);line-height:1.02;margin:11px 0 14px}
+.hw-copy h3 em{font-style:normal;color:var(--cyan)}
+.hw-copy p{color:var(--muted);font-size:15px;max-width:420px;margin-bottom:20px}
+.specs{display:flex;gap:26px;flex-wrap:wrap;margin-bottom:22px}
+.spec b{display:block;font-family:'Chakra Petch',sans-serif;font-size:21px;color:var(--ice)}
+[data-theme="light"] .spec b{color:var(--text)}
+.spec span{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.price{display:flex;align-items:center;gap:14px}
+.price .amt{font-family:'Chakra Petch',sans-serif;font-size:24px;color:var(--cyan)}
+.price .amt small{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.hw-art{position:relative;display:grid;place-items:center;min-height:280px}
+.glowpad{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,var(--cyan-glow),transparent 62%);filter:blur(8px)}
+.device{position:relative;z-index:2;filter:drop-shadow(0 28px 46px rgba(0,0,0,.6))}
+
+/* MINERS */
+.rail-sec{border-top:1px solid var(--line-soft);overflow:hidden}
+.rail{display:flex;gap:20px;overflow-x:auto;padding:4px 4px 24px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.rail::-webkit-scrollbar{height:5px}
+.rail::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+.minecard{flex:0 0 330px;scroll-snap-align:start;border-radius:16px;padding:24px;position:relative;overflow:hidden;background:var(--card-bg);border:1px solid var(--line-soft);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.minecard::before{content:"";position:absolute;inset:0;background:var(--gloss);pointer-events:none}
+.minecard .hash{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;color:var(--cyan);text-transform:uppercase}
+.minecard h4{font-family:'Chakra Petch',sans-serif;font-size:23px;margin:7px 0 4px}
+.minecard .blurb{color:var(--muted);font-size:13px;min-height:50px}
+.minecard .mfoot{display:flex;align-items:center;justify-content:space-between;margin-top:18px;padding-top:16px;border-top:1px solid var(--line-soft)}
+.minecard .mfoot .p{font-family:'Chakra Petch',sans-serif;font-size:19px;color:var(--ice)}
+[data-theme="light"] .minecard .mfoot .p{color:var(--text)}
+.pill{font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:11.5px;letter-spacing:.05em;padding:7px 14px;border-radius:8px;color:var(--btn-primary-color);background:var(--btn-primary-bg);box-shadow:inset 0 1px 1px rgba(255,255,255,.7);cursor:pointer;border:none;text-decoration:none;display:inline-block}
+
+/* SPEC LIST */
+.list-sec{border-top:1px solid var(--line-soft)}
+.plist{border-top:1px solid var(--line)}
+.prow{display:grid;grid-template-columns:50px 1.6fr 2fr 1fr auto;gap:20px;align-items:center;padding:22px 8px;border-bottom:1px solid var(--line-soft);transition:background .2s}
+.prow:hover{background:rgba(0,229,255,.03)}
+@media(max-width:820px){.prow{grid-template-columns:34px 1fr auto;gap:12px}.prow .ds,.prow .pr{display:none}}
+.prow .n{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--cyan-deep)}
+.prow .nm{font-family:'Chakra Petch',sans-serif;font-size:18px}
+.prow .nm small{display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.1em;margin-top:2px}
+.prow .ds{color:var(--muted);font-size:13.5px}
+.prow .pr{font-family:'Chakra Petch',sans-serif;font-size:17px;color:var(--cyan)}
+.prow .lk{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ice);border:1px solid var(--line);border-radius:7px;padding:8px 13px;letter-spacing:.08em;transition:.2s;white-space:nowrap;text-decoration:none;display:inline-block}
+.prow .lk:hover{background:var(--cyan);color:#021014;border-color:var(--cyan)}
+
+/* ECOSYSTEM */
+.eco{border-top:1px solid var(--line);padding-top:0;background:linear-gradient(180deg,transparent,rgba(5,150,174,.04))}
+.eco-head{padding:72px 0 28px}
+.cloak{display:grid;grid-template-columns:1.2fr 1fr;gap:36px;align-items:center;border:1px solid var(--line);border-radius:20px;padding:40px;margin-bottom:22px;position:relative;overflow:hidden;background:var(--card-bg);box-shadow:0 22px 54px rgba(0,0,0,.5)}
+.cloak::after{content:"";position:absolute;inset:0;background:var(--gloss);pointer-events:none}
+.cloak .k{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.24em;color:var(--cyan);text-transform:uppercase}
+.cloak h3{font-family:'Chakra Petch',sans-serif;font-size:clamp(28px,3.8vw,48px);line-height:1;margin:12px 0 12px}
+.cloak p{color:var(--muted);font-size:14.5px;max-width:420px}
+.cloak .go{display:inline-flex;align-items:center;gap:9px;margin-top:22px;font-family:'Chakra Petch',sans-serif;font-weight:600;color:var(--btn-primary-color);background:var(--btn-primary-bg);padding:12px 20px;border-radius:10px;box-shadow:0 8px 22px var(--cyan-glow),inset 0 1px 1px rgba(255,255,255,.65);letter-spacing:.04em;text-decoration:none}
+.cloak-art{position:relative;min-height:180px;display:grid;place-items:center}
+@media(max-width:780px){.cloak{grid-template-columns:1fr}.cloak-art{display:none}}
+</style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="spark"></span><b>THE&nbsp;<span>BIT</span>&nbsp;LIFE</b></a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-pill">Home</a>
+      <a href="shop.html" class="nav-pill">Shop</a>
+      <a href="bookstore.html" class="nav-pill">Bookstore</a>
+      <a href="media.html" class="nav-pill">Media</a>
+      <a href="projects.html" class="nav-pill">Projects</a>
+      <a href="signal.html" class="nav-pill">The Signal</a>
+      <a href="mempool.html" class="nav-pill">Mempool</a>
+    </div>
+    <div class="nav-right">
+      <a href="shop.html" class="nav-cta">Shop the Drop</a>
+      <div class="theme-toggle"><span class="icon icon-moon">🌙</span><div class="toggle-track" id="toggle-track"><div class="toggle-thumb"></div></div><span class="icon icon-sun" style="opacity:.35">☀️</span></div>
+    </div>
+  </div>
+</nav>
+<div class="sitewall" id="sitewall"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Sovereign apparel · open hardware · 21M only</div>
+    <h1>PROOF<br>OF&nbsp;WEAR<span class="sweep">PROOF<br>OF&nbsp;WEAR</span></h1>
+    <p class="hero-sub">Threads for people who hold their own keys. We blur the merch until the drop goes live — and we stock the <b>hardware wallets, BitAxes, and miners</b> to back the lifestyle up.</p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <a href="#drops" class="btn btn-primary">See the locked drop →</a>
+      <a href="#wallets" class="btn btn-ghost">Browse hardware</a>
+    </div>
+  </div>
+  <div class="ticker">
+    <div class="ticker-track">
+      <span>FREE COLD-STORAGE STICKER · <b>EVERY ORDER</b></span><span>SHIP TO <b>ANY NODE</b></span>
+      <span>PAY IN <b>BTC / LIGHTNING</b></span><span>BITAXE <b>IN STOCK</b></span><span>OPEN SOURCE <b>OR IT DIDN'T HAPPEN</b></span>
+      <span>FREE COLD-STORAGE STICKER · <b>EVERY ORDER</b></span><span>SHIP TO <b>ANY NODE</b></span>
+      <span>PAY IN <b>BTC / LIGHTNING</b></span><span>BITAXE <b>IN STOCK</b></span><span>OPEN SOURCE <b>OR IT DIDN'T HAPPEN</b></span>
+    </div>
+  </div>
+</header>
+
+<!-- TEE WALL -->
+<section class="teewall-sec" id="drops">
+  <div class="wrap">
+    <div class="shead reveal">
+      <div>
+        <div class="locked"><span class="dot-pulse"></span> Drop 03 · locked until block 900,000</div>
+        <h2>The wall stays blurred<br>until you're early.</h2>
+      </div>
+      <p>Twenty-one tees. Glossy cyan on void black. Resolution unlocks at mint — claim a slot to see them sharp.</p>
+    </div>
+    <div class="teewall reveal" id="wall">
+      <div class="wall-glass">
+        <div class="card">
+          <h3>UNLOCK THE DROP</h3>
+          <p>Reserve a slot. The blur lifts at go-live.</p>
+          <a href="#" class="btn btn-primary">Reserve a tee</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HARDWARE WALLETS -->
+<section id="wallets">
+  <div class="wrap">
+    <div class="shead reveal">
+      <div><div class="lbl">// Cold storage</div><h2>Hardware wallets.</h2></div>
+      <p>Not your keys, not your coins. We carry the signers serious holders trust.</p>
+    </div>
+    <div class="hw-row reveal">
+      <div class="hw-art"><div class="glowpad"></div>
+        <svg class="device" width="220" height="290" viewBox="0 0 220 290">
+          <defs><linearGradient id="cc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#16242b"/><stop offset="1" stop-color="#070d10"/></linearGradient><linearGradient id="ccg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bff6ff"/><stop offset="1" stop-color="#0596ae"/></linearGradient></defs>
+          <rect x="15" y="10" width="190" height="270" rx="18" fill="url(#cc)" stroke="#00e5ff" stroke-opacity=".22"/>
+          <rect x="34" y="28" width="152" height="74" rx="7" fill="#04181d" stroke="#00e5ff" stroke-opacity=".32"/>
+          <text x="110" y="58" text-anchor="middle" fill="#00e5ff" font-family="JetBrains Mono" font-size="10.5">SIGN TX?</text>
+          <text x="110" y="78" text-anchor="middle" fill="#7fe9f5" font-family="JetBrains Mono" font-size="8.5">0.21000000 BTC</text>
+          <g fill="url(#ccg)"><circle cx="55" cy="144" r="13"/><circle cx="110" cy="144" r="13"/><circle cx="165" cy="144" r="13"/><circle cx="55" cy="188" r="13"/><circle cx="110" cy="188" r="13"/><circle cx="165" cy="188" r="13"/><circle cx="55" cy="232" r="13"/><circle cx="110" cy="232" r="13"/><circle cx="165" cy="232" r="13"/></g>
+        </svg>
+      </div>
+      <div class="hw-copy">
+        <div class="idx">01 / AIR-GAPPED</div>
+        <h3>COLDCARD <em>Q</em></h3>
+        <p>Full keyboard, true air-gap, PSBT over microSD or QR. The signer that never touches your computer.</p>
+        <div class="specs"><div class="spec"><b>QR + SD</b><span>Air-gap</span></div><div class="spec"><b>Secure</b><span>2× SE chips</span></div><div class="spec"><b>Open</b><span>Source firmware</span></div></div>
+        <div class="price"><span class="amt">$169 <small>/ ≈ 0.0016 BTC</small></span><a href="https://coldcard.com" class="btn btn-primary" target="_blank" rel="noopener">Add to cart</a></div>
+      </div>
+    </div>
+    <div class="hw-row rev reveal">
+      <div class="hw-art"><div class="glowpad"></div>
+        <svg class="device" width="110" height="290" viewBox="0 0 110 290"><defs><linearGradient id="bb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a2a31"/><stop offset="1" stop-color="#070d10"/></linearGradient></defs><rect x="22" y="18" width="66" height="254" rx="15" fill="url(#bb)" stroke="#00e5ff" stroke-opacity=".22"/><rect x="32" y="36" width="46" height="86" rx="5" fill="#04181d" stroke="#00e5ff" stroke-opacity=".38"/><rect x="36" y="140" width="38" height="5" rx="2.5" fill="#00e5ff" opacity=".7"/><rect x="36" y="158" width="38" height="5" rx="2.5" fill="#00e5ff" opacity=".4"/><rect x="36" y="176" width="38" height="5" rx="2.5" fill="#00e5ff" opacity=".22"/><circle cx="55" cy="236" r="13" fill="none" stroke="#00e5ff" stroke-opacity=".45"/></svg>
+      </div>
+      <div class="hw-copy">
+        <div class="idx">02 / POCKET</div>
+        <h3>BITBOX<em>02</em></h3>
+        <p>Swiss-built, dead simple, touch-slider entry. USB-C straight into your node or phone. Friendliest cold wallet for beginners.</p>
+        <div class="specs"><div class="spec"><b>USB-C</b><span>Plug & sign</span></div><div class="spec"><b>Touch</b><span>Slider input</span></div><div class="spec"><b>BTC-only</b><span>Edition</span></div></div>
+        <div class="price"><span class="amt">$149 <small>/ ≈ 0.0014 BTC</small></span><a href="https://bitbox.swiss" class="btn btn-primary" target="_blank" rel="noopener">Add to cart</a></div>
+      </div>
+    </div>
+    <div class="hw-row reveal">
+      <div class="hw-art"><div class="glowpad"></div>
+        <svg class="device" width="250" height="252" viewBox="0 0 250 252"><defs><linearGradient id="ss" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#13212a"/><stop offset="1" stop-color="#060c10"/></linearGradient></defs><rect x="26" y="56" width="198" height="140" rx="11" fill="url(#ss)" stroke="#00e5ff" stroke-opacity=".22"/><rect x="46" y="76" width="118" height="100" rx="5" fill="#04181d" stroke="#00e5ff" stroke-opacity=".38"/><g stroke="#00e5ff" stroke-width="1.8" opacity=".65"><path d="M58 88h12v12H58zM82 88h12v12H82zM106 88h12v12H106z" fill="#00e5ff"/><path d="M58 112h12v12H58zM106 112h12v12H106z" fill="#00e5ff" opacity=".5"/></g><circle cx="196" cy="108" r="13" fill="none" stroke="#00e5ff" stroke-opacity=".45"/><circle cx="196" cy="148" r="13" fill="none" stroke="#00e5ff" stroke-opacity=".45"/></svg>
+      </div>
+      <div class="hw-copy">
+        <div class="idx">03 / DIY</div>
+        <h3>SEED<em>SIGNER</em></h3>
+        <p>Build it yourself for the price of a Pi. Stateless, camera-driven signing that holds zero private data when powered off.</p>
+        <div class="specs"><div class="spec"><b>$0 data</b><span>Stateless</span></div><div class="spec"><b>Camera</b><span>QR signing</span></div><div class="spec"><b>FOSS</b><span>Fully open</span></div></div>
+        <div class="price"><span class="amt">$95 <small>/ kit · ≈ 0.0009 BTC</small></span><a href="https://seedsigner.com" class="btn btn-primary" target="_blank" rel="noopener">Get the kit</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MINERS -->
+<section class="rail-sec" id="miners">
+  <div class="wrap">
+    <div class="shead reveal">
+      <div><div class="lbl">// Home hashrate</div><h2>BitAxes &amp; miners.</h2></div>
+      <p>Solo-mine the lottery, heat your room, or stack hashrate. Open-firmware ASICs that belong on your desk.</p>
+    </div>
+    <div class="rail reveal">
+      <div class="minecard"><div class="hash">~ 500 GH/s</div><h4>BitAxe Gamma</h4><p class="blurb">Single BM1370 chip. Open-source solo lottery miner that sips ~15W and looks like art on a shelf.</p><div class="mfoot"><span class="p">$199</span><a href="#" class="pill">Add to cart</a></div></div>
+      <div class="minecard"><div class="hash">~ 2.5 TH/s</div><h4>BitAxe Hex</h4><p class="blurb">Six-chip board for the over-achievers. Real hashrate, still quiet enough for a home office.</p><div class="mfoot"><span class="p">$489</span><a href="#" class="pill">Add to cart</a></div></div>
+      <div class="minecard"><div class="hash">~ 3 TH/s</div><h4>NerdMiner Pro</h4><p class="blurb">USB-powered desktop miner with a live stats display. The gateway drug to running your own hashrate.</p><div class="mfoot"><span class="p">$129</span><a href="#" class="pill">Add to cart</a></div></div>
+      <div class="minecard"><div class="hash">~ 1.2 TH/s</div><h4>Antminer Slim S</h4><p class="blurb">Quiet immersion-ready unit tuned for home efficiency. Mine and heat — one box, two jobs.</p><div class="mfoot"><span class="p">$899</span><a href="#" class="pill">Add to cart</a></div></div>
+      <div class="minecard"><div class="hash">HEAT</div><h4>HashHeater 360</h4><p class="blurb">A space heater that pays you back in sats. Ducted ASIC core, app-controlled, winter-approved.</p><div class="mfoot"><span class="p">$1,290</span><a href="#" class="pill">Add to cart</a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MORE GEAR -->
+<section class="list-sec" id="gear">
+  <div class="wrap">
+    <div class="shead reveal">
+      <div><div class="lbl">// Everything else sovereign</div><h2>The full stack.</h2></div>
+      <p>More hardware wallets, steel backups, node kits and signing tools.</p>
+    </div>
+    <div class="plist reveal">
+      <div class="prow"><span class="n">04</span><div class="nm">Trezor Safe 5<small>HARDWARE WALLET</small></div><div class="ds">Color touchscreen signer with secure element and Shamir backup.</div><span class="pr">$169</span><a class="lk" href="https://trezor.io" target="_blank" rel="noopener">View →</a></div>
+      <div class="prow"><span class="n">05</span><div class="nm">Foundation Passport<small>HARDWARE WALLET</small></div><div class="ds">Air-gapped, camera + microSD, beautifully machined aluminium body.</div><span class="pr">$199</span><a class="lk" href="https://foundationdevices.com" target="_blank" rel="noopener">View →</a></div>
+      <div class="prow"><span class="n">06</span><div class="nm">Blockstream Jade<small>HARDWARE WALLET</small></div><div class="ds">Open-source signer with virtual secure element. Budget cold storage.</div><span class="pr">$64</span><a class="lk" href="https://blockstream.com/jade" target="_blank" rel="noopener">View →</a></div>
+      <div class="prow"><span class="n">07</span><div class="nm">Steel Seed Plate<small>BACKUP</small></div><div class="ds">Fireproof, waterproof titanium backup for your 12 / 24 words.</div><span class="pr">$79</span><a class="lk" href="#">View →</a></div>
+      <div class="prow"><span class="n">08</span><div class="nm">Sovereign Node Kit<small>FULL NODE</small></div><div class="ds">Pre-built mini-PC ready to flash your favourite node OS. Plug in and verify.</div><span class="pr">$329</span><a class="lk" href="#">View →</a></div>
+      <div class="prow"><span class="n">09</span><div class="nm">Lightning Punchcard Tee<small>APPAREL</small></div><div class="ds">Glossy cyan print on heavyweight void-black cotton. Drops with the wall.</div><span class="pr">$48</span><a class="lk" href="#drops">View →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM -->
+<section class="eco" id="ecosystem">
+  <div class="wrap">
+    <div class="eco-head reveal">
+      <div class="lbl">// Run your own everything</div>
+      <h2 style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(28px,4.2vw,52px);margin-top:11px;line-height:1">The sovereign ecosystem.</h2>
+    </div>
+    <a class="cloak reveal" href="https://cryptocloaks.com" target="_blank" rel="noopener">
+      <div>
+        <div class="k">Partner · 3D printed armor</div>
+        <h3>CRYPTO<br>CLOAKS</h3>
+        <p>Cases, mounts, miner frames and node enclosures. If it needs a custom shell, they print it.</p>
+        <span class="go">Visit cryptocloaks.com →</span>
+      </div>
+      <div class="cloak-art">
+        <svg width="200" height="185" viewBox="0 0 220 200"><defs><linearGradient id="cl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#bff6ff"/><stop offset="1" stop-color="#0596ae"/></linearGradient></defs><g fill="none" stroke="url(#cl)" stroke-width="2" opacity=".85"><path d="M110 20 200 70 200 150 110 200 20 150 20 70Z"/><path d="M110 20 110 110 200 70M110 110 20 70M110 110 110 200"/></g><g fill="#00e5ff" opacity=".2"><path d="M110 20 200 70 110 110 20 70Z"/></g></svg>
+      </div>
+    </a>
+    <a class="cloak reveal" href="https://umbrel.com" target="_blank" rel="noopener" style="grid-template-columns:1fr">
+      <div>
+        <div class="k">Self-host · node + app store</div>
+        <h3>umbrel</h3>
+        <p>Your personal server for Bitcoin, Lightning and a whole app store of self-hosted tools.</p>
+        <span class="go">Launch umbrel.com →</span>
+      </div>
+    </a>
+    <a class="cloak reveal" href="https://start9.com" target="_blank" rel="noopener" style="grid-template-columns:1fr">
+      <div>
+        <div class="k">Partner · sovereign computing</div>
+        <h3>START9</h3>
+        <p>StartOS turns a small box into your private server — Bitcoin node, password manager, the lot.</p>
+        <span class="go">Open start9.com →</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand"><span class="spark"></span><b>THE&nbsp;<span>BIT</span>&nbsp;LIFE</b></a>
+        <p>Sovereign apparel and open hardware. Pay in BTC or Lightning. 21M only.</p>
+        <div class="foot-oss"><a href="https://github.com/fourthSol/thebitlife" target="_blank" rel="noopener">github.com/fourthSol/thebitlife</a> · Open source · PRs welcome</div>
+      </div>
+      <div class="foot-cols">
+        <div class="fcol"><h5>Shop</h5><a href="#drops">The Drop</a><a href="#wallets">Hardware wallets</a><a href="#miners">BitAxes</a><a href="#gear">All gear</a></div>
+        <div class="fcol"><h5>Site</h5><a href="index.html">Home</a><a href="bookstore.html">Bookstore</a><a href="media.html">Media</a><a href="projects.html">Projects</a></div>
+        <div class="fcol"><h5>Ecosystem</h5><a href="https://umbrel.com" target="_blank" rel="noopener">Umbrel ↗</a><a href="https://start9.com" target="_blank" rel="noopener">Start9 ↗</a><a href="https://blockstream.com" target="_blank" rel="noopener">Blockstream ↗</a></div>
+      </div>
+    </div>
+    <div class="foot-base"><span>© 2026 THE BIT LIFE · NOT YOUR KEYS, NOT YOUR FIT</span><span>BUILT FOR THE 21 MILLION</span></div>
+  </div>
+</footer>
+
+<script src="js/shared.js"></script>
+<script>
+(function(){
+  const wall = document.getElementById('wall');
+  const names = ['SATOSHI','HODL','SOVEREIGN','PROOF','21M','BLOCK 900K','NO KYC','PLEB','TIMECHAIN','RUN A NODE','STACK','ORANGE PILL','KEYS','HASHRATE','OP_RETURN','NGU','CYPHERPUNK','SELF CUSTODY'];
+  const grads = [['#00e5ff','#0596ae'],['#bff6ff','#0a7c8e'],['#7fe9f5','#063b45'],['#00e5ff','#022a31'],['#aef3ff','#0596ae'],['#5fd6e8','#04222a']];
+  const heights = [230,300,260,210,340,250,290,220,310,240];
+  let html='';
+  for(let i=0;i<18;i++){
+    const g=grads[i%grads.length], h=heights[(i*3)%heights.length], gid='tg'+i;
+    html+=`<a class="tee" href="#"><svg viewBox="0 0 200 ${h}" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${g[0]}"/><stop offset="1" stop-color="${g[1]}"/></linearGradient></defs><rect width="200" height="${h}" fill="#0a0e11"/><path d="M58 ${h*.16} L80 ${h*.10} Q100 ${h*.18} 120 ${h*.10} L142 ${h*.16} L168 ${h*.30} L150 ${h*.42} L138 ${h*.34} L138 ${h*.92} L62 ${h*.92} L62 ${h*.34} L50 ${h*.42} L32 ${h*.30} Z" fill="url(#${gid})" opacity="0.92"/><circle cx="100" cy="${h*.52}" r="${h*.13}" fill="#050709" opacity="0.55"/></svg><span class="tag">DROP&nbsp;03 · <b>${names[i%names.length]}</b></span></a>`;
+  }
+  wall.insertAdjacentHTML('beforeend', html);
+})();
+</script>
+</body>
+</html>

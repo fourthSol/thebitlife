@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bookstore — THE BIT LIFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/shared.css">
+<style>
+.hero{padding:80px 0 50px}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(48px,8vw,104px);line-height:.92;background:linear-gradient(178deg,#fff 0%,#bff6ff 28%,var(--cyan) 62%,var(--cyan-deep) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 8px 36px rgba(0,229,255,.2))}
+[data-theme="light"] .hero h1{background:linear-gradient(178deg,#001830 0%,var(--cyan) 70%,var(--cyan-deep) 100%);-webkit-background-clip:text;background-clip:text}
+.hero-sub{max-width:540px;margin:22px 0 0;color:var(--muted);font-size:16px;line-height:1.65}
+.hero-sub b{color:var(--ice)}
+[data-theme="light"] .hero-sub b{color:var(--text)}
+
+/* FILTERS */
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px}
+.filter-btn{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  padding:7px 16px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line);color:var(--muted);background:rgba(255,255,255,.02);
+  transition:all .18s;user-select:none;
+}
+.filter-btn:hover,.filter-btn.active{color:var(--cyan);border-color:var(--cyan);background:rgba(0,229,255,.06)}
+[data-theme="light"] .filter-btn:hover,[data-theme="light"] .filter-btn.active{color:var(--cyan-deep);border-color:var(--cyan-deep);background:rgba(0,119,182,.06)}
+
+/* BOOK GRID — not infinite scroll, full page display */
+.book-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:24px;
+}
+@media(max-width:600px){.book-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
+
+.book-card{
+  border-radius:16px;overflow:hidden;
+  border:1px solid var(--line-soft);
+  background:var(--card-bg);
+  box-shadow:0 10px 32px rgba(0,0,0,.4);
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+  position:relative;
+}
+.book-card:hover{transform:translateY(-5px);border-color:var(--line);box-shadow:0 18px 44px rgba(0,0,0,.5),0 0 28px var(--cyan-glow)}
+.book-card::before{content:"";position:absolute;inset:0;background:var(--gloss);pointer-events:none;z-index:1}
+
+.book-cover{
+  height:200px;position:relative;display:flex;align-items:flex-end;
+  padding:14px;overflow:hidden;
+}
+.book-cover-inner{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:14px;
+}
+.book-spine{position:absolute;left:0;top:0;bottom:0;width:8px;background:rgba(0,0,0,.4)}
+.book-gloss{position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.25) 0%,rgba(255,255,255,0) 50%)}
+.book-flag{
+  position:absolute;top:10px;right:10px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;
+  padding:3px 7px;border-radius:4px;text-transform:uppercase;z-index:2;
+}
+
+.book-meta{padding:16px}
+.book-title{font-family:'Chakra Petch',sans-serif;font-size:15px;line-height:1.25;margin-bottom:5px;color:var(--ice)}
+[data-theme="light"] .book-title{color:var(--text)}
+.book-author{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--muted);margin-bottom:8px;text-transform:uppercase}
+.book-note{font-size:12px;color:var(--muted);line-height:1.55}
+.book-actions{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px solid var(--line-soft)}
+.book-cat{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.book-find{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.07em;
+  color:var(--ice);border:1px solid var(--line);border-radius:6px;
+  padding:6px 11px;transition:.18s;text-decoration:none;white-space:nowrap;
+}
+.book-find:hover{background:var(--cyan);color:#021014;border-color:var(--cyan)}
+
+/* FEATURED BOOK (Software by Jason Lowery) */
+.featured-book{
+  display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:center;
+  border:1px solid rgba(255,212,0,.25);border-radius:20px;padding:40px;margin-bottom:40px;
+  background:linear-gradient(120deg,rgba(255,212,0,.04),rgba(0,229,255,.03));
+  box-shadow:0 20px 56px rgba(0,0,0,.5);position:relative;overflow:hidden;
+}
+.featured-book::after{content:"";position:absolute;inset:0;background:var(--gloss);pointer-events:none}
+.featured-cover{width:160px;height:220px;border-radius:4px 10px 10px 4px;box-shadow:0 16px 40px rgba(0,0,0,.6),4px 0 0 rgba(0,0,0,.3);flex-shrink:0;overflow:hidden;position:relative}
+.featured-cover-inner{width:100%;height:100%;background:linear-gradient(135deg,#1A0A00 0%,#4A1800 40%,#8B4513 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:16px;position:relative}
+.featured-cover-inner::before{content:"";position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,150,0,.2),transparent)}
+.featured-spine{position:absolute;left:0;top:0;bottom:0;width:9px;background:rgba(0,0,0,.5)}
+.featured-flag{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.2em;background:rgba(255,212,0,.15);border:1px solid rgba(255,212,0,.35);color:#FFD400;padding:2px 6px;border-radius:3px;text-transform:uppercase;margin-bottom:8px;display:inline-block}
+.featured-title-cover{font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:700;color:#FFD400;line-height:1.1;text-shadow:0 0 12px rgba(255,212,0,.4)}
+.featured-author-cover{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,200,100,.7);margin-top:4px;letter-spacing:.1em}
+.featured-copy .flag-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.featured-copy .flag{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;padding:3px 8px;border-radius:4px;text-transform:uppercase;background:rgba(255,212,0,.12);border:1px solid rgba(255,212,0,.3);color:#FFD400}
+.featured-copy h3{font-family:'Chakra Petch',sans-serif;font-size:clamp(22px,3vw,38px);line-height:1.05;margin-bottom:6px}
+.featured-copy .sub{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--muted);margin-bottom:16px;font-style:italic}
+.featured-copy p{color:var(--muted);font-size:14.5px;line-height:1.65;max-width:520px;margin-bottom:20px}
+@media(max-width:680px){.featured-book{grid-template-columns:1fr}.featured-cover{display:none}}
+</style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="spark"></span><b>THE&nbsp;<span>BIT</span>&nbsp;LIFE</b></a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-pill">Home</a>
+      <a href="shop.html" class="nav-pill">Shop</a>
+      <a href="bookstore.html" class="nav-pill">Bookstore</a>
+      <a href="media.html" class="nav-pill">Media</a>
+      <a href="projects.html" class="nav-pill">Projects</a>
+      <a href="signal.html" class="nav-pill">The Signal</a>
+      <a href="mempool.html" class="nav-pill">Mempool</a>
+    </div>
+    <div class="nav-right">
+      <a href="shop.html" class="nav-cta">Shop the Drop</a>
+      <div class="theme-toggle"><span class="icon icon-moon">🌙</span><div class="toggle-track" id="toggle-track"><div class="toggle-thumb"></div></div><span class="icon icon-sun" style="opacity:.35">☀️</span></div>
+    </div>
+  </div>
+</nav>
+<div class="sitewall" id="sitewall"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Bitcoin reading list · curated, not algorithmic</div>
+    <h1>BOOKSTORE</h1>
+    <p class="hero-sub">From first principles to deep cuts. The shelf that turns curiosity into conviction. <b>No infinite scroll</b> — all books visible, all at once.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+
+    <!-- FEATURED: Software by Jason Lowery -->
+    <div class="shead reveal" style="margin-bottom:20px">
+      <div><div class="lbl">// Featured title</div><h2>Staff pick.</h2></div>
+    </div>
+    <div class="featured-book reveal">
+      <div class="featured-cover">
+        <div class="featured-cover-inner">
+          <div class="featured-spine"></div>
+          <div class="featured-flag">FEATURED</div>
+          <div class="featured-title-cover">SOFTWAR</div>
+          <div class="featured-author-cover">Jason Paul Lowery</div>
+        </div>
+      </div>
+      <div class="featured-copy">
+        <div class="flag-row">
+          <span class="flag">⭐ Staff Pick</span>
+          <span class="flag" style="background:rgba(0,229,255,.08);border-color:var(--line);color:var(--cyan)">Military Strategy</span>
+        </div>
+        <h3>Softwar</h3>
+        <div class="sub">A Novel Theory on Power Projection and the National Strategic Significance of Bitcoin — Jason Paul Lowery (2023)</div>
+        <p>A US Space Force officer's MIT thesis turned book. Lowery argues Bitcoin is a form of electro-cyber warfare — that proof-of-work mining is a physical power projection mechanism with profound national security implications. Possibly the most ambitious strategic argument ever made for Bitcoin.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a href="https://www.google.com/search?q=Softwar+Jason+Lowery+book" target="_blank" rel="noopener" class="btn btn-primary">Find it →</a>
+          <a href="https://www.google.com/search?q=Jason+Paul+Lowery+MIT+bitcoin+softwar" target="_blank" rel="noopener" class="btn btn-ghost">Learn more</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="shead reveal" style="margin-bottom:20px">
+      <div><div class="lbl">// Full library</div><h2>All books.</h2></div>
+    </div>
+    <div class="filter-bar reveal" id="filter-bar"></div>
+
+    <!-- BOOK GRID -->
+    <div class="book-grid reveal" id="book-grid"></div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand"><span class="spark"></span><b>THE&nbsp;<span>BIT</span>&nbsp;LIFE</b></a>
+        <p>Curated Bitcoin reading list. From first principles to deep cuts.</p>
+        <div class="foot-oss"><a href="https://github.com/fourthSol/thebitlife" target="_blank" rel="noopener">github.com/fourthSol/thebitlife</a> · Open source · PRs welcome</div>
+      </div>
+      <div class="foot-cols">
+        <div class="fcol"><h5>Pages</h5><a href="index.html">Home</a><a href="shop.html">Shop</a><a href="media.html">Media</a><a href="projects.html">Projects</a></div>
+        <div class="fcol"><h5>Categories</h5><a href="#" data-cat="economics">Economics</a><a href="#" data-cat="technical">Technical</a><a href="#" data-cat="history">History</a><a href="#" data-cat="philosophy">Philosophy</a></div>
+      </div>
+    </div>
+    <div class="foot-base"><span>© 2026 THE BIT LIFE</span><span>CURATED FOR THE 21 MILLION</span></div>
+  </div>
+</footer>
+
+<script src="js/shared.js"></script>
+<script>
+const BOOKS = [
+  {t:'The Bitcoin Standard', a:'Saifedean Ammous', note:'The economic case for sound money. The orange pill in book form. Required reading.',cat:'economics',g:['#00e5ff','#0596ae'],flag:'Essential'},
+  {t:'Mastering Bitcoin', a:'Andreas M. Antonopoulos', note:'The technical bible — how Bitcoin actually works under the hood. Open source on GitHub.',cat:'technical',g:['#16242b','#070d10'],flag:'Technical'},
+  {t:'The Internet of Money', a:'Andreas M. Antonopoulos', note:'The "why" of Bitcoin, told through his best talks. Electrifying for newcomers.',cat:'philosophy',g:['#bff6ff','#0a7c8e'],flag:null},
+  {t:'Programming Bitcoin', a:'Jimmy Song', note:'Build Bitcoin from scratch in Python. For the hands-on pleb who wants to truly get it.',cat:'technical',g:['#0596ae','#022a31'],flag:'Dev'},
+  {t:'The Blocksize War', a:'Jonathan Bier', note:"The fight for Bitcoin's soul, blow by blow. The most dramatic story in crypto history.",cat:'history',g:['#7fe9f5','#063b45'],flag:null},
+  {t:'Layered Money', a:'Nik Bhatia', note:"Money as a system of layers — and where Bitcoin fits. Banker-friendly framing.",cat:'economics',g:['#5fd6e8','#04222a'],flag:null},
+  {t:'21 Lessons', a:'Gigi', note:'What the rabbit hole teaches you. Poetic and profound. Free to read at 21lessons.com.',cat:'philosophy',g:['#aef3ff','#0596ae'],flag:null},
+  {t:'Check Your Financial Privilege', a:'Alex Gladstein', note:'Bitcoin as a human-rights tool. Stories from countries where it matters most.',cat:'philosophy',g:['#00e5ff','#04222a'],flag:null},
+  {t:'Inventing Bitcoin', a:'Yan Pritzker', note:'Bitcoin explained from first principles, plainly. Shortest path to real understanding.',cat:'technical',g:['#bff6ff','#0596ae'],flag:'Beginner'},
+  {t:'Mastering the Lightning Network', a:'A. Antonopoulos, O. Osuntokun & R. Pickhardt', note:'The definitive guide to Lightning — channels, routing, and running your own node.',cat:'technical',g:['#ffd400','#0596ae'],flag:'LN'},
+  {t:'The Fiat Standard', a:'Saifedean Ammous', note:"The sequel to The Bitcoin Standard. How fiat money works, and why it fails.",cat:'economics',g:['#ff6b35','#1a0a00'],flag:null},
+  {t:'Bitcoin: Sovereignty Through Mathematics', a:'Knut Svanholm', note:'A philosophical exploration of why Bitcoin matters for individual sovereignty.',cat:'philosophy',g:['#7fe9f5','#022a31'],flag:null},
+  {t:'Bitcoin and Black America', a:'Isaiah Jackson', note:"Why Bitcoin matters especially to Black Americans — historical context and financial freedom.",cat:'philosophy',g:['#aef3ff','#063b45'],flag:null},
+  {t:'Digital Gold', a:'Nathaniel Popper', note:"The definitive journalistic account of Bitcoin's early years. A gripping narrative.",cat:'history',g:['#ffd400','#022a31'],flag:'History'},
+  {t:'The Genesis Book', a:'Aaron van Wirdum', note:'The intellectual history of Bitcoin — from cypherpunks and e-cash to Satoshi.',cat:'history',g:['#00e5ff','#063b45'],flag:'New'},
+  {t:'Softwar', a:'Jason Paul Lowery', note:"MIT thesis: Bitcoin as power projection. The national strategic case. Bold and controversial.",cat:'strategy',g:['#8B4513','#1A0A00'],flag:'Staff Pick'},
+];
+
+const cats = ['all', ...new Set(BOOKS.map(b=>b.cat))];
+let activeCat = 'all';
+
+const filterBar = document.getElementById('filter-bar');
+const grid = document.getElementById('book-grid');
+const find = q => 'https://www.google.com/search?q='+encodeURIComponent(q+' book');
+
+filterBar.innerHTML = cats.map(c=>`<button class="filter-btn${c==='all'?' active':''}" data-cat="${c}">${c}</button>`).join('');
+filterBar.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    activeCat = btn.dataset.cat;
+    filterBar.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b===btn));
+    render();
+  });
+});
+
+function render(){
+  const filtered = activeCat === 'all' ? BOOKS : BOOKS.filter(b=>b.cat===activeCat);
+  grid.innerHTML = filtered.map(b=>`
+    <div class="book-card">
+      <div class="book-cover" style="background:linear-gradient(145deg,${b.g[0]},${b.g[1]})">
+        <div class="book-spine"></div>
+        <div class="book-gloss"></div>
+        ${b.flag ? `<span class="book-flag" style="background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.2);color:#fff">${b.flag}</span>` : ''}
+      </div>
+      <div class="book-meta">
+        <div class="book-title">${b.t}</div>
+        <div class="book-author">${b.a}</div>
+        <div class="book-note">${b.note}</div>
+      </div>
+      <div class="book-actions">
+        <span class="book-cat">${b.cat}</span>
+        <a class="book-find" href="${find(b.t+' '+b.a)}" target="_blank" rel="noopener">Find →</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+render();
+</script>
+</body>
+</html>
