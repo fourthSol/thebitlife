@@ -5,6 +5,7 @@
 
 /* ---------- VARIABLES: DARK (default) ---------- */
 :root {
+  --nav-h:92px;
   --void:#050709;--panel:#0A0E11;--panel-2:#0E151B;
   --cyan:#00E5FF;--cyan-deep:#0596AE;--cyan-glow:rgba(0,229,255,.28);
   --ice:#CFFAFF;--text:#E6F6F9;--muted:#6E828B;
@@ -82,10 +83,11 @@ body::before{
 a{color:inherit;text-decoration:none}
 .wrap{max-width:1280px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
 
-/* ---------- NAV: Crystal Liquid Glass + 2000s Bevel ---------- */
+/* ---------- NAV: Crystal Liquid Glass pill cluster ---------- */
 #main-nav{
   position:fixed;top:0;left:0;right:0;z-index:200;
-  height:68px;display:flex;align-items:stretch;
+  min-height:var(--nav-h);display:flex;align-items:center;
+  padding:18px 0 14px;
   background:var(--nav-bg);
   backdrop-filter:blur(28px) saturate(200%) brightness(1.12);
   -webkit-backdrop-filter:blur(28px) saturate(200%) brightness(1.12);
@@ -97,8 +99,35 @@ a{color:inherit;text-decoration:none}
   transition:background .5s,border-color .5s;
 }
 .nav-inner{
-  width:100%;max-width:1280px;margin:0 auto;padding:0 24px;
-  display:flex;align-items:center;gap:16px;
+  width:100%;max-width:1280px;margin:0 auto;padding:0 28px;
+  display:flex;align-items:center;gap:18px;
+}
+
+/* Single crystal see-through pill holding all page links */
+.nav-crystal-pill{
+  display:flex;align-items:center;flex:1;justify-content:center;
+  gap:0;padding:6px 10px;border-radius:999px;flex-wrap:nowrap;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.14) 0%,rgba(0,229,255,.07) 38%,rgba(255,255,255,.05) 72%,rgba(0,180,220,.04) 100%);
+  backdrop-filter:blur(22px) saturate(190%);
+  -webkit-backdrop-filter:blur(22px) saturate(190%);
+  border:1px solid rgba(255,255,255,.2);
+  box-shadow:
+    0 0 0 1px rgba(0,229,255,.1) inset,
+    0 1px 0 rgba(255,255,255,.28) inset,
+    0 -1px 0 rgba(0,0,0,.22) inset,
+    0 10px 36px rgba(0,0,0,.38),
+    0 0 48px rgba(0,229,255,.06);
+  position:relative;overflow:hidden;
+}
+.nav-crystal-pill::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.22) 0%,transparent 38%,rgba(0,229,255,.04) 100%);
+}
+[data-theme="light"] .nav-crystal-pill{
+  background:linear-gradient(135deg,rgba(255,255,255,.82) 0%,rgba(254,240,210,.55) 50%,rgba(255,255,255,.7) 100%);
+  border-color:rgba(0,119,182,.22);
+  box-shadow:0 8px 28px rgba(0,60,100,.12),inset 0 1px 0 rgba(255,255,255,.9);
 }
 .brand{
   display:flex;align-items:center;gap:10px;
@@ -122,51 +151,49 @@ a{color:inherit;text-decoration:none}
 .brand b{font-size:16px;color:var(--text)}
 .brand b span{color:var(--cyan)}
 
-/* Nav links row */
-.nav-links{display:flex;gap:6px;flex:1;flex-wrap:nowrap;overflow:hidden}
+/* Nav links row — one crystal pill */
+.nav-links{display:flex;flex:1;justify-content:center;min-width:0}
 @media(max-width:900px){.nav-links{display:none}}
 
-/* 2000s-inspired bevel pill buttons */
-.nav-pill{
+.nav-crystal-pill .nav-pill{
   font-family:'Chakra Petch',sans-serif;font-weight:600;
-  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--pill-color);
-  padding:6px 12px;border-radius:5px;
-  background:var(--pill-bg);
-  border:1px solid var(--pill-border);
-  border-top-color:var(--pill-border-top);
-  border-bottom-color:var(--pill-border-bot);
-  box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 -1px 0 rgba(0,0,0,.14) inset;
-  text-shadow:0 1px 2px rgba(0,0,0,.7);
-  transition:color .12s,transform .1s,box-shadow .12s,background .12s,border-color .12s;
+  font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:rgba(207,250,255,.72);
+  padding:8px 14px;border-radius:999px;
+  background:transparent;border:none;box-shadow:none;
+  text-shadow:0 1px 3px rgba(0,0,0,.55);
+  transition:color .15s,background .15s,transform .12s,text-shadow .15s;
   cursor:pointer;user-select:none;white-space:nowrap;
   text-decoration:none;display:inline-flex;align-items:center;
-  position:relative;
+  position:relative;z-index:1;
 }
-[data-theme="light"] .nav-pill{text-shadow:0 1px 1px rgba(255,255,255,.8)}
-.nav-pill:hover{
-  color:var(--pill-hover-color);
-  transform:scale(1.13) translateY(-2px) skewX(-3deg);
-  background:var(--pill-hover-bg);
-  border-color:var(--pill-hover-border);
-  border-top-color:var(--pill-hover-border);
-  box-shadow:0 0 22px var(--cyan-glow),0 0 6px rgba(0,229,255,.7),inset 0 1px 0 rgba(0,229,255,.2);
-  text-shadow:0 0 10px rgba(0,229,255,1),0 0 20px rgba(0,229,255,.5);
-  z-index:2;
+.nav-crystal-pill .nav-pill + .nav-pill::before{
+  content:"";position:absolute;left:0;top:22%;bottom:22%;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,.22),transparent);
+  pointer-events:none;
 }
-[data-theme="light"] .nav-pill:hover{
-  text-shadow:0 0 8px rgba(0,119,182,.9);
-  box-shadow:0 0 18px rgba(0,119,182,.4),inset 0 1px 0 rgba(0,119,182,.2);
+[data-theme="light"] .nav-crystal-pill .nav-pill{color:rgba(10,40,70,.62);text-shadow:0 1px 0 rgba(255,255,255,.8)}
+.nav-crystal-pill .nav-pill:hover{
+  color:#fff;
+  background:rgba(0,229,255,.18);
+  transform:translateY(-1px);
+  text-shadow:0 0 12px rgba(0,229,255,.9);
 }
-.nav-pill.pressing{
-  transform:scale(0.92) translateY(2px) skewX(0deg) !important;
-  background:linear-gradient(180deg,rgba(0,0,0,.2) 0%,rgba(0,229,255,.1) 100%) !important;
-  box-shadow:inset 0 2px 8px rgba(0,0,0,.5),0 0 8px var(--cyan-glow) !important;
-  border-top-color:rgba(0,0,0,.4) !important;
-  border-bottom-color:rgba(255,255,255,.1) !important;
-  transition-duration:.04s !important;
+[data-theme="light"] .nav-crystal-pill .nav-pill:hover{
+  color:var(--cyan-deep);background:rgba(0,119,182,.12);
+  text-shadow:none;
 }
-.nav-pill.active-page{color:var(--cyan);border-color:var(--line)}
+.nav-crystal-pill .nav-pill.pressing{
+  transform:scale(.96) translateY(1px) !important;
+  background:rgba(0,229,255,.28) !important;
+  transition-duration:.05s !important;
+}
+.nav-crystal-pill .nav-pill.active-page{
+  color:var(--cyan);
+  background:rgba(0,229,255,.14);
+  text-shadow:0 0 10px rgba(0,229,255,.65);
+}
+[data-theme="light"] .nav-crystal-pill .nav-pill.active-page{color:var(--cyan-deep);background:rgba(0,119,182,.1)}
 
 /* Right nav actions */
 .nav-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
@@ -216,7 +243,7 @@ a{color:inherit;text-decoration:none}
 
 /* ---------- SITE WALL (Bitcoiner chip scroll) ---------- */
 .sitewall{
-  position:relative;z-index:30;margin-top:68px;
+  position:relative;z-index:30;margin-top:var(--nav-h);
   border-bottom:1px solid var(--line);
   background:linear-gradient(180deg,rgba(8,13,17,.94),rgba(5,7,9,.72));
   padding:12px 0;overflow:hidden;
