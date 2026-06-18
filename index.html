@@ -48,16 +48,19 @@
   border-left:1px solid var(--line-soft);overflow:visible;z-index:2;
 }
 .hero-video-rail{
-  position:fixed;top:calc(var(--nav-h) + 52px);right:0;width:min(46vw,560px);
-  z-index:1;pointer-events:none;
-  -webkit-mask:linear-gradient(180deg,transparent 0%,#000 14%,#000 92%,transparent 100%);
-  mask:linear-gradient(180deg,transparent 0%,#000 14%,#000 92%,transparent 100%);
+  position:fixed;right:0;width:min(46vw,560px);
+  z-index:3;pointer-events:none;
+  -webkit-mask:linear-gradient(180deg,transparent 0%,#000 10%,#000 90%,transparent 100%);
+  mask:linear-gradient(180deg,transparent 0%,#000 10%,#000 90%,transparent 100%);
+  transition:top .45s cubic-bezier(.34,1.15,.64,1);
 }
+.hero-video-rail.is-following{transition:top .08s linear}
 .hero-video-viewport{
   width:100%;overflow:hidden;opacity:.16;
   filter:saturate(.75) contrast(1.05);
-  transition:opacity .2s linear;
+  transition:opacity .35s ease;
 }
+.hero-video-rail.audio-live .hero-video-viewport{opacity:.32}
 .hero-video-viewport iframe,.hero-video-viewport > div{
   width:100%!important;height:100%!important;pointer-events:none;
 }
@@ -176,18 +179,22 @@
   color:var(--muted);text-transform:uppercase;
 }
 
-/* Video chrome — bottom right */
-.video-chrome{
-  position:fixed;right:22px;bottom:22px;z-index:210;
-  display:flex;align-items:center;gap:10px;
+/* Video chrome — rides on video rail */
+.hero-video-rail .video-chrome{
+  position:absolute;right:18px;bottom:14px;z-index:6;
+  display:flex;align-items:center;gap:12px;pointer-events:auto;
 }
 .video-ctrl{
-  width:44px;height:44px;border-radius:12px;cursor:pointer;
-  border:1px solid rgba(0,229,255,.35);
-  background:linear-gradient(180deg,rgba(10,18,22,.88),rgba(5,10,14,.92));
+  width:56px;height:56px;border-radius:14px;cursor:pointer;
+  border:1px solid rgba(0,229,255,.4);
+  background:linear-gradient(180deg,rgba(10,18,22,.92),rgba(5,10,14,.95));
   color:var(--cyan);display:grid;place-items:center;
-  box-shadow:0 6px 20px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08);
-  transition:opacity .2s,transform .15s,border-color .2s;
+  box-shadow:0 8px 26px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.1);
+  transition:opacity .2s,transform .15s,border-color .2s,box-shadow .2s;
+}
+.hero-video-rail.audio-live .video-ctrl.mute-ctrl{
+  border-color:rgba(0,229,255,.65);
+  box-shadow:0 0 20px rgba(0,229,255,.25),0 8px 26px rgba(0,0,0,.5);
 }
 .video-ctrl:hover:not(:disabled){transform:translateY(-2px);border-color:var(--cyan)}
 .video-ctrl:disabled{opacity:.35;cursor:not-allowed}
@@ -205,7 +212,6 @@
   .hero-right{min-height:auto;border:none;display:none}
   .hero-video-rail{display:none}
   .surf-stage{height:300px}
-  .video-chrome{right:14px;bottom:14px}
 }
 
 /* ---- THREE-COLUMN LAYOUT ---- */
@@ -510,18 +516,17 @@
       </div>
     </div>
   </div>
-  <div class="hero-right">
-    <div class="hero-video-rail" id="hero-video-rail" aria-hidden="true">
-      <div class="hero-video-viewport" id="hero-video-viewport">
-        <div id="hero-yt-mount"></div>
-      </div>
-    </div>
-  </div>
+  <div class="hero-right" aria-hidden="true"></div>
 </header>
 
-<div class="video-chrome" id="video-chrome">
-  <button class="video-ctrl pause-ctrl" id="video-pause" type="button" disabled title="Scroll through the full site to unlock pause"><svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><rect x="9" y="8" width="5" height="16" fill="currentColor"/><rect x="18" y="8" width="5" height="16" fill="currentColor"/></svg></button>
-  <button class="video-ctrl mute-ctrl" id="video-mute" type="button" aria-label="Unmute background video"></button>
+<div class="hero-video-rail" id="hero-video-rail" aria-hidden="true">
+  <div class="hero-video-viewport" id="hero-video-viewport">
+    <div id="hero-yt-mount"></div>
+  </div>
+  <div class="video-chrome" id="video-chrome">
+    <button class="video-ctrl pause-ctrl" id="video-pause" type="button" disabled title="Scroll through the full site to unlock pause"><svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect x="9" y="8" width="5" height="16" fill="currentColor"/><rect x="18" y="8" width="5" height="16" fill="currentColor"/></svg></button>
+    <button class="video-ctrl mute-ctrl" id="video-mute" type="button" aria-label="Unmute background video"></button>
+  </div>
 </div>
 
 <!-- MAIN 3-COL -->
