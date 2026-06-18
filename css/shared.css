@@ -162,9 +162,30 @@ a{color:inherit;text-decoration:none}
   color:#9459FF;font-size:11px;font-weight:700;
   animation:hintnudge 1.6s ease-in-out infinite;
 }
+.nav-iris-truth{
+  font-family:'JetBrains Mono',monospace;font-size:7.5px;letter-spacing:.12em;
+  text-transform:uppercase;margin:5px 0 0;color:rgba(148,93,255,.72);line-height:1.4;
+}
+.nav-iris-truth b{color:rgba(207,250,255,.85);font-weight:500}
 @keyframes hintnudge{
   0%,100%{transform:translateX(0);opacity:.7}
   50%{transform:translateX(-4px);opacity:1}
+}
+body.iris-flow-active .nav-iris-row{
+  position:relative;z-index:10002;
+  animation:irisSpotlight 2.2s ease-in-out infinite;
+}
+body.iris-flow-active .nav-iris-block{
+  box-shadow:0 0 32px rgba(148,93,255,.55),0 0 64px rgba(148,93,255,.25),0 0 0 1px rgba(255,255,255,.12) inset;
+  border-color:rgba(200,160,255,.9);
+}
+body.iris-flow-active .nav-iris-hint{
+  display:inline-flex !important;font-size:10px;color:#fff;
+  text-shadow:0 0 18px rgba(148,93,255,.95),0 0 36px rgba(0,229,255,.4);
+}
+@keyframes irisSpotlight{
+  0%,100%{filter:drop-shadow(0 0 8px rgba(148,93,255,.4))}
+  50%{filter:drop-shadow(0 0 22px rgba(148,93,255,.85)) drop-shadow(0 0 40px rgba(0,229,255,.35))}
 }
 [data-theme="light"] .nav-iris-block{background:linear-gradient(135deg,rgba(120,60,200,.12),rgba(148,93,255,.08))}
 [data-theme="light"] .nav-iris-block .iris-label{color:#6b3fa8}
@@ -411,12 +432,9 @@ section{padding:72px 0;position:relative}
   background:rgba(255,212,0,.1);border:1px solid rgba(255,212,0,.25);color:#ffd400;
 }
 .dev-status{
-  display:flex;align-items:center;gap:7px;margin-top:12px;
+  margin-top:12px;
   font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;
 }
-.dev-dot{width:6px;height:6px;border-radius:50%;background:var(--muted)}
-.dev-dot.active{background:#00e676;box-shadow:0 0 8px #00e676;animation:pulse 1.6s infinite}
-@keyframes pulse{50%{opacity:.3}}
 
 /* ---------- SCROLL REVEAL ---------- */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease}

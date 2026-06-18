@@ -148,7 +148,7 @@
 
     <!-- FEATURED: Software by Jason Lowery -->
     <div class="shead reveal" style="margin-bottom:20px">
-      <div><div class="lbl">// Featured title</div><h2>Staff pick.</h2></div>
+      <div><div class="lbl">// Featured title</div><h2>Highlights.</h2></div>
     </div>
     <div class="featured-book reveal">
       <div class="featured-cover">
@@ -161,7 +161,7 @@
       </div>
       <div class="featured-copy">
         <div class="flag-row">
-          <span class="flag">⭐ Staff Pick</span>
+          <span class="flag">⭐ Highlight</span>
           <span class="flag" style="background:rgba(0,229,255,.08);border-color:var(--line);color:var(--cyan)">Military Strategy</span>
         </div>
         <h3>Softwar</h3>
@@ -221,7 +221,8 @@ const BOOKS = [
   {t:'Bitcoin and Black America', a:'Isaiah Jackson', note:"Why Bitcoin matters especially to Black Americans — historical context and financial freedom.",cat:'philosophy',g:['#aef3ff','#063b45'],flag:null},
   {t:'Digital Gold', a:'Nathaniel Popper', note:"The definitive journalistic account of Bitcoin's early years. A gripping narrative.",cat:'history',g:['#ffd400','#022a31'],flag:'History'},
   {t:'The Genesis Book', a:'Aaron van Wirdum', note:'The intellectual history of Bitcoin — from cypherpunks and e-cash to Satoshi.',cat:'history',g:['#00e5ff','#063b45'],flag:'New'},
-  {t:'Softwar', a:'Jason Paul Lowery', note:"MIT thesis: Bitcoin as power projection. The national strategic case. Bold and controversial.",cat:'strategy',g:['#8B4513','#1A0A00'],flag:'Staff Pick'},
+  {t:'Softwar', a:'Jason Paul Lowery', note:"MIT thesis: Bitcoin as power projection. The national strategic case. Bold and controversial.",cat:'strategy',g:['#8B4513','#1A0A00'],flag:'Highlight'},
+  {t:'Bitcoin is for Everyone', a:'Natalie Brunell', note:'Why our financial system is broken and Bitcoin is the solution. From the Coin Stories host — macro, accessible, urgent.',cat:'economics',g:['#ff5cf0','#0a7c8e'],flag:'New',url:'https://www.amazon.com/Bitcoin-Everyone-financial-system-solution/dp/1804091138'},
 ];
 
 const cats = ['all', ...new Set(BOOKS.map(b=>b.cat))];
@@ -256,7 +257,7 @@ function render(){
       </div>
       <div class="book-actions">
         <span class="book-cat">${b.cat}</span>
-        <a class="book-find" href="${find(b.t+' '+b.a)}" target="_blank" rel="noopener">Find →</a>
+        <a class="book-find" href="${b.url || find(b.t+' '+b.a)}" target="_blank" rel="noopener">${b.url ? 'Amazon →' : 'Find →'}</a>
       </div>
     </div>
   `).join('');

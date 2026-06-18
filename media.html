@@ -59,6 +59,69 @@
 .pod-desc{font-size:13px;color:var(--muted);margin-top:5px;line-height:1.5}
 .pod-arrow{font-size:18px;color:var(--muted);flex-shrink:0}
 .pod-card:hover .pod-arrow{color:var(--cyan)}
+
+/* LIVE HUB — latest YouTube + X feeds */
+.live-hub{
+  display:grid;grid-template-columns:1fr min(38vw,420px);gap:20px;
+  align-items:stretch;margin-bottom:8px;
+}
+@media(max-width:1100px){.live-hub{grid-template-columns:1fr}}
+.live-panel{
+  border:1px solid var(--line-soft);border-radius:18px;
+  background:var(--card-bg);overflow:hidden;
+  box-shadow:0 16px 44px rgba(0,0,0,.42);min-width:0;
+}
+.live-panel-hd{
+  padding:14px 18px 12px;border-bottom:1px solid var(--line-soft);
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+}
+.live-panel-hd .lbl{margin-bottom:0}
+.live-panel-hd p{font-size:12px;color:var(--muted);margin:0}
+.live-scroll{
+  display:flex;gap:18px;overflow-x:auto;padding:18px 18px 20px;
+  scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:var(--cyan) transparent;
+}
+.live-scroll::-webkit-scrollbar{height:6px}
+.live-scroll::-webkit-scrollbar-thumb{background:var(--cyan);border-radius:99px;opacity:.5}
+.yt-col,.x-col{
+  flex:0 0 200px;scroll-snap-align:start;display:flex;flex-direction:column;gap:10px;
+}
+.x-col{flex:0 0 300px}
+.yt-col-head,.x-col-head{
+  font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:600;
+  color:var(--ice);text-decoration:none;line-height:1.2;
+  border-bottom:1px solid var(--line-soft);padding-bottom:8px;
+  transition:color .2s;
+}
+[data-theme="light"] .yt-col-head,[data-theme="light"] .x-col-head{color:var(--text)}
+.yt-col-head:hover,.x-col-head:hover{color:var(--cyan)}
+.x-col-head{display:flex;flex-direction:column;gap:2px}
+.x-handle{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--muted);font-weight:400}
+.yt-col-vids{display:flex;flex-direction:column;gap:10px}
+.yt-vid{
+  display:grid;grid-template-columns:72px 1fr;gap:8px;align-items:start;
+  text-decoration:none;border-radius:10px;padding:6px;
+  border:1px solid transparent;transition:border-color .2s,background .2s;
+}
+.yt-vid:hover{border-color:var(--line);background:rgba(0,229,255,.04)}
+.yt-vid img{width:72px;height:40px;object-fit:cover;border-radius:6px;grid-row:span 2}
+.yt-vid-title{font-size:11.5px;line-height:1.35;color:var(--ice);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+[data-theme="light"] .yt-vid-title{color:var(--text)}
+.yt-vid-date{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;color:var(--muted);grid-column:2}
+.yt-vid-skel{display:grid;grid-template-columns:72px 1fr;gap:8px;padding:6px}
+.skel-thumb{width:72px;height:40px;border-radius:6px;background:var(--line-soft);animation:pulse 1.4s ease infinite}
+.skel-line{height:32px;border-radius:6px;background:var(--line-soft);animation:pulse 1.4s ease infinite}
+@keyframes pulse{0%,100%{opacity:.45}50%{opacity:.9}}
+.yt-vid-empty{font-size:11px;color:var(--muted);line-height:1.5}
+.yt-vid-empty a{color:var(--cyan)}
+.x-frame-wrap{
+  height:300px;border-radius:12px;overflow:hidden;
+  border:1px solid var(--line-soft);background:rgba(0,0,0,.25);
+}
+.x-frame-wrap iframe{width:100%;height:100%;border:0}
+.x-note{font-size:10.5px;color:var(--muted);line-height:1.45}
+.x-panel .live-scroll{padding-right:28px}
 </style>
 </head>
 <body>
@@ -102,12 +165,39 @@
     <h1>THE MEDIA TAB</h1>
     <p class="hero-sub">The channels, podcasts, and builders that orange-pilled the rest of us. Every link points out to the source.</p>
     <div class="jump">
+      <a href="#latest">↘ Latest</a>
       <a href="#videos">↘ Videos</a>
       <a href="#podcasts">↘ Podcasts</a>
       <a href="#desktops">↘ Desktops</a>
     </div>
   </div>
 </header>
+
+<!-- LATEST — live YouTube + X -->
+<section id="latest" style="border-bottom:1px solid var(--line-soft)">
+  <div class="wrap">
+    <div class="shead reveal">
+      <div><div class="lbl">// Live pull · 10 channels</div><h2>Latest from the bitcoiners.</h2></div>
+      <p>Fresh uploads and OG voices — scroll sideways through channels and X feeds.</p>
+    </div>
+    <div class="live-hub reveal">
+      <div class="live-panel yt-panel">
+        <div class="live-panel-hd">
+          <div class="lbl">// YouTube · 3 newest each</div>
+          <p>Channel name up top · videos below</p>
+        </div>
+        <div class="live-scroll" id="yt-latest-rail"></div>
+      </div>
+      <div class="live-panel x-panel">
+        <div class="live-panel-hd">
+          <div class="lbl">// X · OG timeline</div>
+          <p>Saylor · Back · Odell + 19 more</p>
+        </div>
+        <div class="live-scroll" id="x-feed-rail"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- VIDEOS -->
 <section id="videos">
@@ -170,24 +260,30 @@
 </footer>
 
 <script src="js/shared.js"></script>
+<script src="js/media-feed.js"></script>
 <script>
-const yt = q => 'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
 const videos = [
-  {ch:'What Bitcoin Did', t:'Long-form bitcoiner interviews', sub:'Peter McCormack · the OG podcast', g:['#00e5ff','#0596ae'], q:'What Bitcoin Did Peter McCormack'},
-  {ch:'Coin Stories', t:'Macro, money & freedom', sub:'Natalie Brunell · weekly deep-dives', g:['#ff5cf0','#0a7c8e'], q:'Coin Stories Natalie Brunell bitcoin'},
-  {ch:'BTC Sessions', t:'How to use a hardware wallet', sub:'Step-by-step self-custody tutorials', g:['#5fd6e8','#04222a'], q:'BTC Sessions bitcoin tutorial'},
-  {ch:'Lightning Labs', t:'LND & the Lightning Network', sub:'Build on Lightning', g:['#bff6ff','#0596ae'], q:'Lightning Labs LND youtube'},
-  {ch:'aantonop', t:'Bitcoin: a money for enemies', sub:'Andreas M. Antonopoulos · talks & Q&A', g:['#7fe9f5','#063b45'], q:'aantonop Andreas Antonopoulos bitcoin'},
-  {ch:'Bitcoin Magazine', t:'News, events & culture', sub:'The Bitcoin frontline', g:['#aef3ff','#0596ae'], q:'Bitcoin Magazine youtube'},
-  {ch:'Stephan Livera', t:'Bitcoin-only, tech & economics', sub:'For the deep-end pleb', g:['#00e5ff','#022a31'], q:'Stephan Livera podcast bitcoin'},
-  {ch:'TFTC', t:'Tales from the Crypt', sub:'Marty Bent · news & interviews', g:['#5fd6e8','#04222a'], q:'TFTC Marty Bent bitcoin'},
-  {ch:'Jimmy Song', t:'Programming Bitcoin & more', sub:'Dev-grade, first principles', g:['#7fe9f5','#04222a'], q:'Jimmy Song bitcoin youtube'},
-  {ch:'Anita Posch', t:'Bitcoin for fairness', sub:'Global, grassroots, human stories', g:['#bff6ff','#0596ae'], q:'Anita Posch bitcoin'},
-  {ch:'Citadel Dispatch', t:'FOSS & privacy', sub:'ODELL · open-source freedom tech', g:['#ff5cf0','#0a7c8e'], q:'Citadel Dispatch ODELL bitcoin'},
-  {ch:'Lyn Alden', t:'Macro meets Bitcoin', sub:'Strategy & first principles', g:['#00e5ff','#022a31'], q:'Lyn Alden bitcoin macro'},
+  {ch:'Natalie Brunell', t:'Coin Stories · macro & freedom', sub:'Journalist · author · weekly deep-dives', g:['#ff5cf0','#0a7c8e'], u:'https://www.youtube.com/@nataliebrunell'},
+  {ch:'What Bitcoin Did', t:'Long-form bitcoiner interviews', sub:'Peter McCormack · the OG podcast', g:['#00e5ff','#0596ae'], u:'https://www.youtube.com/@whatbitcoindid'},
+  {ch:'BTC Sessions', t:'How to use a hardware wallet', sub:'Step-by-step self-custody tutorials', g:['#5fd6e8','#04222a'], u:'https://www.youtube.com/@btcsessions'},
+  {ch:'aantonop', t:'Bitcoin: a money for enemies', sub:'Andreas M. Antonopoulos · talks & Q&A', g:['#7fe9f5','#063b45'], u:'https://www.youtube.com/@aantonop'},
+  {ch:'Bitcoin Magazine', t:'News, events & culture', sub:'The Bitcoin frontline', g:['#aef3ff','#0596ae'], u:'https://www.youtube.com/@BitcoinMagazine'},
+  {ch:'Stephan Livera', t:'Bitcoin-only, tech & economics', sub:'For the deep-end pleb', g:['#00e5ff','#022a31'], u:'https://www.youtube.com/@StephanLivera'},
+  {ch:'TFTC', t:'Tales from the Crypt', sub:'Marty Bent · news & interviews', g:['#5fd6e8','#04222a'], u:'https://www.youtube.com/@TFTC'},
+  {ch:'Citadel Dispatch', t:'FOSS & privacy', sub:'ODELL · open-source freedom tech', g:['#ff5cf0','#0a7c8e'], u:'https://www.youtube.com/@ODELL'},
+  {ch:'Lyn Alden', t:'Macro meets Bitcoin', sub:'Strategy & first principles', g:['#00e5ff','#022a31'], u:'https://www.youtube.com/@LynAldenMedia'},
+  {ch:'Jimmy Song', t:'Programming Bitcoin & more', sub:'Dev-grade, first principles', g:['#7fe9f5','#04222a'], u:'https://www.youtube.com/c/OffChainwithJimmySong'},
+  {ch:'Lightning Labs', t:'LND & the Lightning Network', sub:'Build on Lightning', g:['#bff6ff','#0596ae'], u:'https://www.youtube.com/@lightning'},
+  {ch:'Anita Posch', t:'Bitcoin for fairness', sub:'Global, grassroots, human stories', g:['#bff6ff','#0596ae'], u:'https://www.youtube.com/c/AnitaPosch'},
+  {ch:'Blockstream', t:'Core tech & Liquid', sub:'Protocol-level engineering', g:['#00e5ff','#022a31'], u:'https://www.youtube.com/@Blockstream'},
+  {ch:'The Pomp', t:'Investor takes & interviews', sub:'Anthony Pompliano · markets daily', g:['#7fe9f5','#063b45'], u:'https://www.youtube.com/@AnthonyPompliano'},
+  {ch:'What is Money', t:'Philosophy of money', sub:'Robert Breedlove · long-form', g:['#bff6ff','#0a7c8e'], u:'https://www.youtube.com/@breedlove22'},
+  {ch:'Bitcoin University', t:'Self-custody, deep-dived', sub:'Matthew Kratter · no-nonsense', g:['#5fd6e8','#04222a'], u:'https://www.youtube.com/@BitcoinUniversity'},
+  {ch:'Miss Teen Crypto', t:'Bitcoin, the fun way', sub:'Randi Hipper · onboarding the next gen', g:['#bff6ff','#0a7c8e'], u:'https://www.youtube.com/@MissTeenCrypto'},
+  {ch:'SovSessions', t:'Sovereignty & self-hosting', sub:'Sovereign living, hands-on', g:['#aef3ff','#0596ae'], u:'https://www.youtube.com/@SovSessions'},
 ];
 document.getElementById('vidrail').innerHTML = videos.map(v=>`
-  <a class="vid" href="${yt(v.q)}" target="_blank" rel="noopener">
+  <a class="vid" href="${v.u}" target="_blank" rel="noopener">
     <div class="thumb" style="background:linear-gradient(135deg,${v.g[0]},${v.g[1]})">
       <span class="yt">▶ YOUTUBE</span>
       <span class="play"><svg width="18" height="20" viewBox="0 0 20 22"><path d="M0 0 L20 11 L0 22 Z" fill="#021014"/></svg></span>
@@ -200,6 +296,7 @@ document.getElementById('vidrail').innerHTML = videos.map(v=>`
   </a>`).join('');
 
 const pods = [
+  {name:'Coin Stories', host:'Natalie Brunell', desc:'Macro, money & freedom. Weekly deep-dives with the biggest names in Bitcoin.', icon:'📖', g:'#ff5cf0', u:'https://www.coinstories.com'},
   {name:'What Bitcoin Did', host:'Peter McCormack', desc:'The OG long-form Bitcoin podcast. Deep interviews with builders, economists, and plebs.', icon:'🎙️', g:'#00e5ff', u:'https://www.whatbitcoindid.com'},
   {name:'Stephan Livera Podcast', host:'Stephan Livera', desc:'Bitcoin-only. Tech, economics, and sovereignty. For the deep-end pleb.', icon:'📡', g:'#bff6ff', u:'https://stephanlivera.com/episodes'},
   {name:'Citadel Dispatch', host:'ODELL', desc:'FOSS, privacy, and freedom technology. No shitcoins, no VC narrative.', icon:'🏰', g:'#7fe9f5', u:'https://citadeldispatch.com'},

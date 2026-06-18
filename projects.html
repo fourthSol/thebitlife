@@ -20,7 +20,7 @@
 .status-active{background:rgba(255,212,0,.1);border:1px solid rgba(255,212,0,.3);color:#ffd400}
 .status-planned{background:rgba(110,130,140,.1);border:1px solid rgba(110,130,140,.2);color:var(--muted)}
 .status-soon{background:rgba(0,229,255,.08);border:1px solid var(--line);color:var(--cyan)}
-.status-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+
 
 /* PROJECT ROWS (staging board) */
 .project-rows{display:flex;flex-direction:column;gap:0}
@@ -223,7 +223,7 @@ const bips = [
 ];
 
 const statusMap = {live:'status-live', active:'status-active', soon:'status-soon', planned:'status-planned'};
-const statusLabel = {live:'● LIVE', active:'● ACTIVE DEV', soon:'COMING SOON', planned:'PLANNED'};
+const statusLabel = {live:'LIVE', active:'ACTIVE DEV', soon:'COMING SOON', planned:'PLANNED'};
 
 function renderRows(data, containerId){
   const el = document.getElementById(containerId);
