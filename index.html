@@ -224,14 +224,10 @@
 @media(max-width:840px){.three-col{grid-template-columns:1fr}}
 
 .sidebar-left,.sidebar-right{
-  position:sticky;top:calc(var(--nav-h) + 8px);align-self:start;
-  height:calc(100vh - var(--nav-h) - 16px);overflow-y:auto;
+  align-self:start;
   padding:32px 28px 32px 16px;
-  scrollbar-width:thin;scrollbar-color:var(--line) transparent;
 }
 .sidebar-right{padding:32px 16px 32px 28px}
-.sidebar-left::-webkit-scrollbar,.sidebar-right::-webkit-scrollbar{width:3px}
-.sidebar-left::-webkit-scrollbar-thumb,.sidebar-right::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
 
 @media(max-width:840px){
   .sidebar-left,.sidebar-right{position:static;height:auto;padding:16px 0}
@@ -346,24 +342,44 @@
 .ev-card a.ev-link:hover{text-decoration:underline}
 
 /* ---- HTML BLOCK SLOTS ---- */
-.block-slots{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.block-slots{display:flex;flex-direction:column;gap:0;margin-top:0}
 .html-block-slot{
-  border:1px dashed var(--line);border-radius:12px;padding:14px 16px;
-  background:rgba(0,229,255,.02);cursor:pointer;
-  transition:border-color .2s,background .2s,transform .15s;
-  position:relative;width:100%;text-align:left;font:inherit;color:inherit;
-  appearance:none;-webkit-appearance:none;
+  cursor:pointer;margin-bottom:16px;
+  border-style:dashed;border-color:rgba(0,229,255,.22);
+  transition:border-color .2s,box-shadow .2s,transform .15s;
 }
-.html-block-slot:hover{border-color:rgba(0,229,255,.35);background:rgba(0,229,255,.05);transform:translateX(2px)}
-.html-block-slot .block-label{
-  display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;
-  letter-spacing:.1em;text-transform:lowercase;color:var(--ice);
+.html-block-slot:hover{
+  border-color:rgba(0,229,255,.45);border-style:solid;
+  box-shadow:0 0 28px rgba(0,229,255,.12);transform:translateY(-2px);
+}
+.html-block-slot .block-slot-hero{
+  font-family:'Chakra Petch',sans-serif;font-weight:700;
+  font-size:clamp(20px,2.8vw,28px);line-height:1.12;letter-spacing:-.01em;
+  text-align:center;text-transform:lowercase;color:var(--ice);
+  margin:14px 0 10px;padding:8px 4px;
 }
 .html-block-slot .block-hint{
-  display:block;margin-top:6px;font-family:'JetBrains Mono',monospace;
-  font-size:9px;letter-spacing:.06em;line-height:1.45;color:var(--muted);
+  display:block;text-align:center;font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:.06em;line-height:1.5;color:var(--muted);
+  margin-bottom:14px;
 }
-.html-block-slot.is-toast .block-label{color:var(--cyan);font-size:10px;line-height:1.5;text-transform:none;letter-spacing:.04em}
+.html-block-slot .block-slot-links{
+  display:flex;flex-direction:column;gap:8px;
+}
+.html-block-slot .block-slot-link{
+  display:flex;align-items:center;gap:6px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;
+  text-decoration:none;transition:opacity .15s;
+}
+.html-block-slot .block-slot-link:hover{opacity:.85;text-decoration:underline}
+.html-block-slot .block-slot-iris{color:#9459FF}
+.html-block-slot .block-slot-github{color:var(--cyan)}
+.html-block-slot.is-toast .block-slot-hero{
+  font-size:11px;line-height:1.55;text-transform:none;letter-spacing:.04em;
+  font-family:'JetBrains Mono',monospace;font-weight:500;color:var(--cyan);
+}
+.html-block-slot.is-toast .block-hint,
+.html-block-slot.is-toast .block-slot-links{display:none}
 
 /* Iris intro overlay */
 .iris-intro-overlay{
@@ -676,6 +692,19 @@ body.iris-flow-active footer{
         <a href="https://acinq.co" target="_blank" rel="noopener" class="ln-link" id="lnk-eclair">Eclair ↗</a>
         <a href="#" class="ln-link vanilla-link" id="vanilla-btn">⚡ Vanilla Self-Host</a>
       </div>
+    </div>
+
+    <div class="widget reveal" style="border-color:rgba(0,229,255,.2)">
+      <div class="widget-header"><span class="widget-label">// Open Source</span></div>
+      <h3 class="widget-title" style="font-size:14px">This site is open source</h3>
+      <p class="widget-desc">Source repo on Iris (Nostr git). Submit changes via GitHub PRs.</p>
+      <a href="https://git.iris.to/#/npub1e0atv85zpjtuk5h890y5vjyqvnjjv4p0xgfncch398k45d9c75gqtutnha/thebit.life" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#9459FF;letter-spacing:.08em">
+        ⚡ git.iris.to/thebit.life →
+      </a>
+      <a href="https://github.com/fourthSol/thebitlife" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--cyan);letter-spacing:.08em">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        github.com/fourthSol/thebitlife · PRs →
+      </a>
     </div>
 
     <div class="block-slots" id="block-slots-left" aria-label="Open HTML block slots"></div>
